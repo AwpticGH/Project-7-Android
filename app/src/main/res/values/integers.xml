@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="request_code_one_tap_ui">333</integer>
     <integer name="request_code_google_sign_in">999</integer>
 </resources>

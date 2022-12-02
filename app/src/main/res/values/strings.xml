@@ -2,4 +2,5 @@
     <string name="app_name">Comicable</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="server_client_id">1069372916268-ioe76regr5c5s3g0prlorud1jrsvca8p.apps.googleusercontent.com</string>
 </resources>
