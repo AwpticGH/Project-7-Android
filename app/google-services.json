@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "1069372916268-f30giu6qne1pjchcapl481djih7bsj2l.apps.googleusercontent.com",
+          "client_id": "1069372916268-dntpus9bu2c9h3cbs0guf7r43457oj64.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "g10.manga.comicable",
-            "certificate_hash": "8f0575e5bdbc801db70f35a8c231cfa45662b9a4"
+            "certificate_hash": "cf2d51e412648065a5d3fab6e2ef6463bb44ac71"
           }
         },
         {

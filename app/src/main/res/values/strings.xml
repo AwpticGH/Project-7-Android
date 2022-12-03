@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Comicable</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="server_client_id">1069372916268-ioe76regr5c5s3g0prlorud1jrsvca8p.apps.googleusercontent.com</string>
+    <string name="SERVER_CLIENT_ID">1069372916268-ioe76regr5c5s3g0prlorud1jrsvca8p.apps.googleusercontent.com</string>
+    <string name="LOGIN_SUCCESSFUL">Login Success</string>
+    <string name="LOGIN_FAILED">Login Failed, Please Try Again!</string>
+    <string name="LOGIN_CANCELED">Login Canceled</string>
+    <string name="NETWORK_ERROR">Network Error. Try Again Later!</string>
+    <string name="LOGOUT_SUCCESSFUL">Logout Success</string>
+    <string name="ONE_TAP_UI_ERROR">OneTapUI Failed Due To Too Many Canceled Sign-In Attempts</string>
 </resources>

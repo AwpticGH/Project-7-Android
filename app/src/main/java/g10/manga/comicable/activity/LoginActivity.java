@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,26 +39,25 @@ public class LoginActivity extends AppCompatActivity {
     private SignInButton btnLoginWithGoogle;
 
     private FirebaseAuth mAuth;
-    private GoogleSignInClient gsc;
-    private GoogleSignInOptions gso;
 
     private Intent intentLogin;
     private Intent intentRegister;
-    private Intent intentLoginWithGoogle;
 
-    private LoginHelper helper;
+    private static LoginHelper helper;
     private boolean isLoggedIn;
+
+    public static LoginHelper getLoginHelper() {
+        return helper;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
-        helper = new LoginHelper(this, mAuth);
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(this, gso);
-        intentLoginWithGoogle = gsc.getSignInIntent();
+        if (helper == null)
+            helper = new LoginHelper(this, mAuth);
 
         intentLogin = new Intent(this, MainActivity.class);
         intentRegister = new Intent(this, RegisterActivity.class);
@@ -73,20 +73,16 @@ public class LoginActivity extends AppCompatActivity {
             String email = inputEmail.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
 
-            helper.beginSignInRequest();
-            isLoggedIn = helper.loginWithEmailAndPassword(email, password);
-            helper.makeToast(isLoggedIn);
-
-            if (isLoggedIn) {
-                startActivity(intentLogin);
-                finish();
-            }
+            helper.loginWithEmailAndPassword(email, password);
         });
 
         btnRegister.setOnClickListener(view -> startActivity(intentRegister));
 
-        btnLoginWithGoogle.setOnClickListener(view -> {
+        if (helper.isOneTapUI())
             helper.beginSignInRequest();
+
+        btnLoginWithGoogle.setOnClickListener(view -> {
+            helper.setOneTapUI(true);
         });
     }
 
@@ -94,7 +90,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-
+        if (helper.isLoggedIn()) {
+            startActivity(intentLogin);
+            finish();
+        }
     }
 
     @Override
@@ -102,24 +101,17 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case R.integer.request_code_one_tap_ui:
-                isLoggedIn = helper.loginWithOneTap(data);
-                helper.makeToast(isLoggedIn);
-
-                if (isLoggedIn) {
-                    startActivity(intentLogin);
-                    finish();
-                }
+            case R.integer.REQUEST_ONE_TAP_UI:
+                helper.loginWithOneTap(data);
                 break;
-            case R.integer.request_code_google_sign_in:
-                isLoggedIn = helper.loginWithGoogle(data);
-                helper.makeToast(isLoggedIn);
+        }
 
-                if (isLoggedIn) {
-                    startActivity(intentLogin);
-                    finish();
-                }
+        switch (resultCode) {
+            case Activity.RESULT_OK:
+                helper.makeToast(R.integer.LOGOUT_SUCCESSFUL);
                 break;
         }
     }
+
+
 }
