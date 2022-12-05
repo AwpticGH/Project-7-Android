@@ -4,25 +4,23 @@ import java.util.List;
 
 import g10.manga.comicable.model.manga.InfoModel;
 import g10.manga.comicable.model.manga.ListModel;
+import g10.manga.comicable.response.ListResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-public interface MangaApi {
+public interface ListApi {
 
-    @GET("/list")
-    Call<List<ListModel>> getAll();
+    @GET("list")
+    Call<ListResponse> getAll();
 
-    @GET("/list")
-    Call<List<ListModel>> getAllWithFilter(@Query("filter")String filter);
+    @GET("list")
+    Call<ListResponse> getAllWithFilter(@Query("filter")String filter);
 
-    @GET("/popular/page/{pageNumber}")
+    @GET("popular/page/{pageNumber}")
     Call<List<InfoModel>> getPopularComics(@Path("pageNumber")int pageNumber);
 
-    @GET("/recommended/page/{pageNumber}")
+    @GET("recommended/page/{pageNumber}")
     Call<List<InfoModel>> getRecommendedComics(@Path("pageNumber")int pageNumber);
-
-    @GET("/info/manga{endpoint}")
-    Call<List<InfoModel>> getComicInfo(@Path("endpoint")String endpoint, String manga);
 }
