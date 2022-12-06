@@ -1,5 +1,7 @@
 package g10.manga.comicable.model.manga;
 
+import com.google.gson.annotations.SerializedName;
+
 public class InfoModel {
 
     private String thumbnail;
@@ -9,6 +11,7 @@ public class InfoModel {
     private String status;
     private String rating;
     private String genre;
+    @SerializedName("chapter_list")
     private ChapterListModel chapterList;
 
     public String getThumbnail() {
