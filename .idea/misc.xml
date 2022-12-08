@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/User/AndroidStudioProjects/Comicable3SE1/app/src/main/res/layout/activity_info.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Comicable3SE1/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Comicable3SE1/app/src/main/res/layout/fragment_info.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Comicable3SE1/app/src/main/res/layout/fragment_page.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Comicable3SE1/app/src/main/res/layout/recycler_view_grid_layout.xml" value="0.203125" />
       </map>
     </option>
   </component>

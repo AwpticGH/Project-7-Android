@@ -10,4 +10,7 @@
     <string name="ONE_TAP_UI_ERROR">OneTapUI Failed Due To Too Many Canceled Sign-In Attempts</string>
     <!-- Strings for api -->
     <string name="MANGA_API_BASE_URL">https://komiku-api.fly.dev/api/comic/</string>
+    <string name="title_activity_info">InfoActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 </resources>

@@ -1,11 +1,14 @@
 package g10.manga.comicable.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import g10.manga.comicable.R;
+import g10.manga.comicable.adapter.ListAdapter;
 import g10.manga.comicable.api.InfoApi;
 import g10.manga.comicable.api.ListApi;
 import g10.manga.comicable.helper.LoginHelper;
@@ -28,12 +32,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
-
+public class MainActivity extends AppCompatActivity implements ListAdapter.ItemClickListener {
 
     FirebaseUser user;
     LoginHelper helper;
 
+    RecyclerView recyclerView;
     TextView textResult;
     Button btnLogout;
 
@@ -41,9 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
     ListApi listApi;
     List<ListModel> mangaLists;
+    ListAdapter adapter;
 
     InfoApi infoApi;
     InfoModel mangaInfo;
+
+    ListAdapter.ItemClickListener itemClickListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,46 +59,7 @@ public class MainActivity extends AppCompatActivity {
         helper = LoginActivity.getLoginHelper();
         user = helper.getCurrentUser();
 
-        listApi = RetrofitHelper.getInstance(getString(R.string.MANGA_API_BASE_URL)).create(ListApi.class);
-        infoApi = RetrofitHelper.getInstance(getString(R.string.MANGA_API_BASE_URL)).create(InfoApi.class);
-
-        Call<ListResponse> callList = listApi.getAll();
-        callList.enqueue(new Callback<ListResponse>() {
-            @SuppressLint("LongLogTag")
-            @Override
-            public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
-                mangaLists = response.body().getLists();
-
-                for (ListModel list : mangaLists) {
-                    Log.d("CallList Result(success)", list.getTitle());
-                    Log.d("CallList Result(success)", list.getEndpoint());
-
-                    Call<InfoResponse> callInfo = infoApi.getComicInfo(list.getEndpoint());
-                    callInfo.enqueue(new Callback<InfoResponse>() {
-                        @SuppressLint("LongLogTag")
-                        @Override
-                        public void onResponse(Call<InfoResponse> call, Response<InfoResponse> response) {
-                            mangaInfo = response.body().getInfo();
-
-                            Log.d("CallInfo Result(success)", "" + mangaInfo.getAuthor());
-                            Log.d("CallInfo Result(success)", "" + mangaInfo.getGenre());
-                            Log.d("CallInfo Result(success)", "" + mangaInfo.getType());
-                        }
-
-                        @Override
-                        public void onFailure(Call<InfoResponse> call, Throwable t) {
-                            Log.w("CallInfo Result(fail)", t.getLocalizedMessage());
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ListResponse> call, Throwable t) {
-                Log.w("CallList Result(Fail)", t.getLocalizedMessage());
-            }
-        });
-
+        // User Email and Logout Button
         textResult = findViewById(R.id.text_login_result);
         btnLogout = findViewById(R.id.button_logout);
 
@@ -106,6 +74,36 @@ public class MainActivity extends AppCompatActivity {
             finish();
             helper.makeToast(R.integer.LOGOUT_SUCCESSFUL);
         });
+        // --------------------------------------------
+
+        // Api Call
+        recyclerView = findViewById(R.id.recycler_view_main);
+        itemClickListener = this::onItemClick;
+
+        listApi = RetrofitHelper.getInstance(getString(R.string.MANGA_API_BASE_URL)).create(ListApi.class);
+        infoApi = RetrofitHelper.getInstance(getString(R.string.MANGA_API_BASE_URL)).create(InfoApi.class);
+
+        Call<ListResponse> callList = listApi.getAll();
+        callList.enqueue(new Callback<ListResponse>() {
+            @SuppressLint("LongLogTag")
+            @Override
+            public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
+                mangaLists = response.body().getLists();
+
+                int columns = mangaLists.size() / 2;
+                recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), columns));
+                adapter = new ListAdapter(getApplicationContext(), mangaLists);
+                adapter.setItemClickListener(itemClickListener);
+                recyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<ListResponse> call, Throwable t) {
+                Log.w("CallList Result(Fail)", t.getLocalizedMessage());
+            }
+        });
+
+
     }
 
     @Override
@@ -116,5 +114,12 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intentLogout);
             finish();
         }
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(this, InfoActivity.class);
+        intent.putExtra("endpoint", adapter.getItem(position).getEndpoint());
+        startActivity(intent);
     }
 }
