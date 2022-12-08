@@ -30,7 +30,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     @Override
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.recycler_view_grid_layout, parent, true);
+        View view = mInflater.inflate(R.layout.recycler_view_grid_layout, parent, false);
         return new ViewHolder(view);
     }
 
