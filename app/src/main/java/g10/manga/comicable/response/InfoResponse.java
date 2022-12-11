@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import g10.manga.comicable.model.manga.InfoModel;
+import g10.manga.comicable.model.manga.ListModel;
 
 public class InfoResponse extends BaseResponse {
 

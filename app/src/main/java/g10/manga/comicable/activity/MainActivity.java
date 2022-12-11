@@ -1,9 +1,13 @@
 package g10.manga.comicable.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,10 +25,10 @@ import g10.manga.comicable.model.manga.ListModel;
 
 public class MainActivity extends AppCompatActivity {
 
-
     FirebaseUser user;
     LoginHelper helper;
 
+    RecyclerView recyclerView;
     TextView textResult;
     Button btnLogout;
 
@@ -56,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         intentLogout = new Intent(this, LoginActivity.class);
 
-        textResult.setText(String.format("Name : %s", user.getEmail()));
+        textResult.setText(user.getEmail());
 
         btnLogout.setOnClickListener(view -> {
             helper.getAuth().signOut();
