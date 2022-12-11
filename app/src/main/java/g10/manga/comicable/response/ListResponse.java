@@ -6,16 +6,12 @@ import java.util.List;
 
 import g10.manga.comicable.model.manga.ListModel;
 
-public class ListResponse {
+public class ListResponse extends BaseResponse {
 
     @SerializedName("data")
     private List<ListModel> lists;
 
     public List<ListModel> getLists() {
         return lists;
-    }
-
-    public void setLists(List<ListModel> lists) {
-        this.lists = lists;
     }
 }

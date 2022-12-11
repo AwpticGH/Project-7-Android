@@ -7,6 +7,6 @@ import retrofit2.http.Path;
 
 public interface InfoApi {
 
-    @GET("/info/manga{endpoint}")
+    @GET("/info/manga/{endpoint}")
     Call<InfoModel> getComicInfo(@Path("endpoint")String endpoint, String manga);
 }

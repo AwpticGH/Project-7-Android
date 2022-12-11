@@ -13,10 +13,10 @@ import retrofit2.http.Query;
 public interface ListApi {
 
     @GET("list")
-    Call<ListResponse> getAll();
+    Call<ListResponse> getAllComics();
 
     @GET("list")
-    Call<ListResponse> getAllWithFilter(@Query("filter")String filter);
+    Call<ListResponse> getAllComicsWithFilter(@Query("filter")String filter);
 
     @GET("popular/page/{pageNumber}")
     Call<List<InfoModel>> getPopularComics(@Path("pageNumber")int pageNumber);

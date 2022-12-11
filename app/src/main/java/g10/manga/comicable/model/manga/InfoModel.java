@@ -2,7 +2,9 @@ package g10.manga.comicable.model.manga;
 
 import com.google.gson.annotations.SerializedName;
 
-public class InfoModel {
+import java.util.List;
+
+public class InfoModel extends BaseModel {
 
     private String thumbnail;
     private String title;
@@ -10,71 +12,38 @@ public class InfoModel {
     private String author;
     private String status;
     private String rating;
-    private String genre;
-    @SerializedName("chapter_list")
-    private ChapterListModel chapterList;
+    @SerializedName("genre") private List<String> genres;
+    @SerializedName("chapter_list") private List<ChapterListModel> chapters;
 
     public String getThumbnail() {
         return thumbnail;
-    }
-
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
     public String getStatus() {
         return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
-        this.rating = rating;
+    public List<String> getGenres() {
+        return genres;
     }
 
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    public ChapterListModel getChapterList() {
-        return chapterList;
-    }
-
-    public void setChapterList(ChapterListModel chapterList) {
-        this.chapterList = chapterList;
+    public List<ChapterListModel> getChapterList() {
+        return chapters;
     }
 }

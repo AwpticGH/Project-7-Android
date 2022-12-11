@@ -70,15 +70,19 @@ public class LoginHelper {
     public void beginSignInRequest() {
         oneTapClient = Identity.getSignInClient(activity);
         signInRequest = BeginSignInRequest.builder()
-                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                .setGoogleIdTokenRequestOptions(
+                        BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                         .setSupported(true)
                         .setServerClientId(activity.getString(R.string.SERVER_CLIENT_ID))
                         .setFilterByAuthorizedAccounts(true)
                         .build()
-                ).setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
+                )
+                .setPasswordRequestOptions(
+                        BeginSignInRequest.PasswordRequestOptions.builder()
                         .setSupported(true)
                         .build()
-                ).setAutoSelectEnabled(true)
+                )
+                .setAutoSelectEnabled(true)
                 .build();
 
         oneTapClient.beginSignIn(signInRequest)
@@ -122,41 +126,6 @@ public class LoginHelper {
                 });
     }
 
-    public void loginWithOneTap(@Nullable Intent data) {
-        try {
-            SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
-            idToken = credential.getGoogleIdToken();
-            email = credential.getId();
-            password = credential.getPassword();
-
-            AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-            auth.signInWithCredential(firebaseCredential)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "loginWithCredential : Success");
-                            activity.startActivity(new Intent(activity, MainActivity.class));
-                        }
-                        else Log.w(TAG, "loginWithCredential : Fail");
-                    });
-        }
-        catch (ApiException e) {
-            switch (e.getStatusCode()) {
-                case CommonStatusCodes.CANCELED:
-                    Log.d(TAG, "One Tap Dialog Closed");
-                    oneTapUI = false;
-                    makeToast(R.integer.LOGIN_CANCELED);
-                    break;
-                case CommonStatusCodes.NETWORK_ERROR:
-                    Log.d(TAG, "One Tap Encountered an Error");
-                    makeToast(R.integer.NETWORK_ERROR);
-                    break;
-                default:
-                    Log.d(TAG, "Failed Getting Credential");
-                    break;
-            }
-        }
-    }
-
     public void makeToast(int loginStatus) {
         String text = null;
         switch (loginStatus) {
@@ -174,10 +143,6 @@ public class LoginHelper {
 
             case R.integer.NETWORK_ERROR:
                 text = activity.getString(R.string.NETWORK_ERROR);
-                break;
-
-            case R.integer.ONE_TAP_UI_ERROR:
-                text = activity.getString(R.string.ONE_TAP_UI_ERROR);
                 break;
 
             case R.integer.LOGIN_FAILED:

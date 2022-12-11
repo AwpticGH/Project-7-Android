@@ -1,6 +1,6 @@
 package g10.manga.comicable.model.manga;
 
-public class ChapterListModel {
+public class ChapterListModel extends BaseModel {
 
     private String name;
     private String endpoint;

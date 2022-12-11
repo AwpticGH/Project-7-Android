@@ -4,25 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseUser;
 
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import g10.manga.comicable.R;
-import g10.manga.comicable.api.ListApi;
+import g10.manga.comicable.api.MangaApi;
+import g10.manga.comicable.call.ListCall;
+import g10.manga.comicable.call.PopularCall;
+import g10.manga.comicable.call.RecommendedCall;
 import g10.manga.comicable.helper.LoginHelper;
-import g10.manga.comicable.helper.RetrofitHelper;
 import g10.manga.comicable.model.manga.ListModel;
-import g10.manga.comicable.response.ListResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,8 +30,12 @@ public class MainActivity extends AppCompatActivity {
 
     Intent intentLogout;
 
-    ListApi listApi;
+    ListCall listCall;
     List<ListModel> lists;
+
+    PopularCall popularCall;
+
+    RecommendedCall recommendedCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,25 +44,12 @@ public class MainActivity extends AppCompatActivity {
         helper = LoginActivity.getLoginHelper();
         user = helper.getCurrentUser();
 
-        listApi = RetrofitHelper.getInstance(getString(R.string.MANGA_API_BASE_URL)).create(ListApi.class);
+        listCall = new ListCall(getString(R.string.MANGA_API_BASE_URL));
+        popularCall = new PopularCall(getString(R.string.MANGA_API_BASE_URL));
+        recommendedCall = new RecommendedCall(getString(R.string.MANGA_API_BASE_URL));
 
-        Call<ListResponse> callList = listApi.getAll();
-        callList.enqueue(new Callback<ListResponse>() {
-            @Override
-            public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
-                lists = response.body().getLists();
-                for (ListModel list : lists) {
-                    Log.d("Call Result(Success)", "Title : " + list.getTitle());
-                    Log.d("Call Result(Success)", "Endpoint : " + list.getEndpoint());
-                    Log.d("Call Result(Success)", "Image : " + list.getImage());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ListResponse> call, Throwable t) {
-                Log.w("Call Result(Fail)", t.getLocalizedMessage());
-            }
-        });
+//        lists = listCall.getAllComics();
+        popularCall.getPopulars(1);
 
         textResult = findViewById(R.id.text_login_result);
         btnLogout = findViewById(R.id.button_logout);
