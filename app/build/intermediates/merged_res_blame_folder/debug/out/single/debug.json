@@ -1,0 +1,142 @@
+[
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_list_item_detail_chapter.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/list_item_detail_chapter.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_activity_chapter.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/activity_chapter.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/menu_menu_navigation.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/menu/menu_navigation.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/drawable_ic_home.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/drawable/ic_home.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/drawable-anydpi-v24_ic_launcher_foreground.xml.flat",
+        "source": "com.azhar.komik.app-pngs-18:/drawable-anydpi-v24/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_fragment_genre.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/fragment_genre.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_main_toolbar.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/main_toolbar.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_activity_list_genre.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/activity_list_genre.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_list_item_slider.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/list_item_slider.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/drawable_selected_dot.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/drawable/selected_dot.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_main_header.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/main_header.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/color_selector_navigation.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/color/selector_navigation.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/drawable_default_dot.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/drawable/default_dot.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-xhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_list_item_komik.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/list_item_komik.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/drawable_ic_list.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/drawable/ic_list.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_fragment_home.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_activity_detail.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/activity_detail.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/drawable_bg_shape.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/drawable/bg_shape.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_list_item_chapter.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/list_item_chapter.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-mdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-xxxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-xxhdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_activity_main.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/drawable-xxxhdpi_ic_comic.png.flat",
+        "source": "com.azhar.komik.app-main-25:/drawable-xxxhdpi/ic_comic.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "com.azhar.komik.app-main-25:/mipmap-hdpi/ic_launcher_round.png"
+    },
+    {
+        "merged": "com.azhar.komik.app-merged_res-23:/layout_list_item_genre.xml.flat",
+        "source": "com.azhar.komik.app-main-25:/layout/list_item_genre.xml"
+    }
+]
