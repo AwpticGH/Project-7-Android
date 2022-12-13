@@ -2,7 +2,7 @@ package g10.manga.comicable.model.manga;
 
 import java.util.ArrayList;
 
-public class ChapterModel {
+public class ChapterModel extends BaseModel {
 
     private String title;
     private ArrayList<String> images;

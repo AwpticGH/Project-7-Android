@@ -1,39 +1,38 @@
 package g10.manga.comicable.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
-import java.net.URI;
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.List;
 
-import g10.manga.comicable.R;
 import g10.manga.comicable.helper.ImageHelper;
+import g10.manga.comicable.model.manga.ChapterModel;
 import g10.manga.comicable.model.manga.ListModel;
 
-public class ListAdapter extends ArrayAdapter<ListModel> {
+public class ChapterAdapter extends ArrayAdapter<String> {
 
-    private List<ListModel> data;
+    private ChapterModel data;
     private Context context;
     private int layoutId;
-    private int textViewId;
+    private int tvChapterNameId;
     private int imageViewId;
 
-    public ListAdapter(@NonNull Context context, int resource, @NonNull List<ListModel> objects, int textViewId, int imageViewId) {
-        super(context, resource, objects);
-        this.data = objects;
+    public ChapterAdapter(@NonNull Context context, int resource, @NonNull ChapterModel object, int tvChapterNameId, int imageViewId) {
+        super(context, resource, object.getImages());
+        this.data = object;
         this.context = context;
         this.layoutId = resource;
-        this.textViewId = textViewId;
+        this.tvChapterNameId = tvChapterNameId;
         this.imageViewId = imageViewId;
     }
 
@@ -46,11 +45,11 @@ public class ListAdapter extends ArrayAdapter<ListModel> {
     public View getView(int position, View convertedView, ViewGroup parent) {
         convertedView = LayoutInflater.from(context)
                 .inflate(layoutId, parent, false);
-        TextView text = convertedView.findViewById(textViewId);
-        ImageView image = convertedView.findViewById(imageViewId);
+        TextView tvChapterName = convertedView.findViewById(tvChapterNameId);
+        ImageView imageView = convertedView.findViewById(imageViewId);
 
-        text.setText(data.get(position).getTitle());
-        ImageHelper imageHelper = new ImageHelper(image, data.get(position).getEndpoint());
+        tvChapterName.setText(data.getTitle());
+        ImageHelper imageHelper = new ImageHelper(imageView, data.getImages().get(position));
         imageHelper.start();
 
         return convertedView;

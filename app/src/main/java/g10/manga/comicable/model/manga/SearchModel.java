@@ -1,6 +1,6 @@
 package g10.manga.comicable.model.manga;
 
-public class SearchModel {
+public class SearchModel extends BaseModel {
 
     private String title;
     private String image;

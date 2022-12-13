@@ -8,7 +8,7 @@ import java.util.List;
 import g10.manga.comicable.model.manga.InfoModel;
 import g10.manga.comicable.model.manga.ListModel;
 
-public class InfoResponse {
+public class InfoResponse extends BaseResponse {
 
     @SerializedName("data")
     private InfoModel info;

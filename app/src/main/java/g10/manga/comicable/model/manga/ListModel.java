@@ -1,6 +1,6 @@
 package g10.manga.comicable.model.manga;
 
-public class ListModel {
+public class ListModel extends BaseModel {
 
     private String title;
     private String image;

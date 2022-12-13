@@ -36,7 +36,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText inputPassword;
     private Button btnLogin;
     private Button btnRegister;
-    private SignInButton btnLoginWithGoogle;
 
     private FirebaseAuth mAuth;
 
@@ -44,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
     private Intent intentRegister;
 
     private static LoginHelper helper;
-    private boolean isLoggedIn;
 
     public static LoginHelper getLoginHelper() {
         return helper;
@@ -66,8 +64,6 @@ public class LoginActivity extends AppCompatActivity {
         inputPassword = findViewById(R.id.input_login_password);
         btnLogin = findViewById(R.id.button_login);
         btnRegister = findViewById(R.id.button_register_page);
-        btnLoginWithGoogle = findViewById(R.id.button_login_with_google);
-        btnLoginWithGoogle.setSize(SignInButton.SIZE_STANDARD);
 
         btnLogin.setOnClickListener(view -> {
             String email = inputEmail.getText().toString().trim();
@@ -77,13 +73,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         btnRegister.setOnClickListener(view -> startActivity(intentRegister));
-
-        if (helper.isOneTapUI())
-            helper.beginSignInRequest();
-
-        btnLoginWithGoogle.setOnClickListener(view -> {
-            helper.setOneTapUI(true);
-        });
     }
 
     @Override
@@ -99,12 +88,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, @Nullable int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case R.integer.REQUEST_ONE_TAP_UI:
-                helper.loginWithOneTap(data);
-                break;
-        }
 
         switch (resultCode) {
             case Activity.RESULT_OK:

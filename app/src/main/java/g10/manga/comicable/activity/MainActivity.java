@@ -7,32 +7,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseUser;
 
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import g10.manga.comicable.R;
-import g10.manga.comicable.adapter.ListAdapter;
-import g10.manga.comicable.api.InfoApi;
-import g10.manga.comicable.api.ListApi;
+import g10.manga.comicable.api.MangaApi;
+import g10.manga.comicable.call.ListCall;
+import g10.manga.comicable.call.PopularCall;
+import g10.manga.comicable.call.RecommendedCall;
 import g10.manga.comicable.helper.LoginHelper;
-import g10.manga.comicable.helper.RetrofitHelper;
-import g10.manga.comicable.model.manga.InfoModel;
 import g10.manga.comicable.model.manga.ListModel;
-import g10.manga.comicable.response.InfoResponse;
-import g10.manga.comicable.response.ListResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements ListAdapter.ItemClickListener {
+public class MainActivity extends AppCompatActivity {
 
     FirebaseUser user;
     LoginHelper helper;
@@ -43,14 +34,12 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.ItemC
 
     Intent intentLogout;
 
-    ListApi listApi;
-    List<ListModel> mangaLists;
-    ListAdapter adapter;
+    ListCall listCall;
+    List<ListModel> lists;
 
-    InfoApi infoApi;
-    InfoModel mangaInfo;
+    PopularCall popularCall;
 
-    ListAdapter.ItemClickListener itemClickListener;
+    RecommendedCall recommendedCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +48,13 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.ItemC
         helper = LoginActivity.getLoginHelper();
         user = helper.getCurrentUser();
 
-        // User Email and Logout Button
+        listCall = new ListCall(getString(R.string.MANGA_API_BASE_URL));
+        popularCall = new PopularCall(getString(R.string.MANGA_API_BASE_URL));
+        recommendedCall = new RecommendedCall(getString(R.string.MANGA_API_BASE_URL));
+
+//        lists = listCall.getAllComics();
+        popularCall.getPopulars(1);
+
         textResult = findViewById(R.id.text_login_result);
         btnLogout = findViewById(R.id.button_logout);
 
@@ -74,36 +69,6 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.ItemC
             finish();
             helper.makeToast(R.integer.LOGOUT_SUCCESSFUL);
         });
-        // --------------------------------------------
-
-        // Api Call
-        recyclerView = findViewById(R.id.recycler_view_main);
-        itemClickListener = this::onItemClick;
-
-        listApi = RetrofitHelper.getInstance(getString(R.string.MANGA_API_BASE_URL)).create(ListApi.class);
-        infoApi = RetrofitHelper.getInstance(getString(R.string.MANGA_API_BASE_URL)).create(InfoApi.class);
-
-        Call<ListResponse> callList = listApi.getAll();
-        callList.enqueue(new Callback<ListResponse>() {
-            @SuppressLint("LongLogTag")
-            @Override
-            public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
-                mangaLists = response.body().getLists();
-
-                int columns = mangaLists.size() / 2;
-                recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), columns));
-                adapter = new ListAdapter(getApplicationContext(), mangaLists);
-                adapter.setItemClickListener(itemClickListener);
-                recyclerView.setAdapter(adapter);
-            }
-
-            @Override
-            public void onFailure(Call<ListResponse> call, Throwable t) {
-                Log.w("CallList Result(Fail)", t.getLocalizedMessage());
-            }
-        });
-
-
     }
 
     @Override
@@ -114,12 +79,5 @@ public class MainActivity extends AppCompatActivity implements ListAdapter.ItemC
             startActivity(intentLogout);
             finish();
         }
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        Intent intent = new Intent(this, InfoActivity.class);
-        intent.putExtra("endpoint", adapter.getItem(position).getEndpoint());
-        startActivity(intent);
     }
 }

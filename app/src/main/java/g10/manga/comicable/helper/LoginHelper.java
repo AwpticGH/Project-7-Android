@@ -5,54 +5,36 @@ import static android.content.ContentValues.TAG;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.Identity;
 import com.google.android.gms.auth.api.identity.SignInClient;
-import com.google.android.gms.auth.api.identity.SignInCredential;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 
 import g10.manga.comicable.R;
 import g10.manga.comicable.activity.MainActivity;
+import g10.manga.comicable.controller.AuthController;
+import g10.manga.comicable.model.AuthModel;
 
 public class LoginHelper {
 
     private Activity activity;
-
     private FirebaseAuth auth;
-
-    SignInClient oneTapClient;
-    BeginSignInRequest signInRequest;
+    private FirebaseUser user;
+    private SignInClient oneTapClient;
+    private BeginSignInRequest signInRequest;
 
     private String idToken = null;
     private String email = null;
     private String password = null;
-
-    private boolean oneTapUI = true;
-
-    public boolean isOneTapUI() {
-        return oneTapUI;
-    }
-
-    public void setOneTapUI(boolean status) {
-        this.oneTapUI = status;
-        if (oneTapUI)
-            beginSignInRequest();
-    }
 
     public boolean isLoggedIn() {
         return auth.getCurrentUser() != null;
@@ -70,15 +52,19 @@ public class LoginHelper {
     public void beginSignInRequest() {
         oneTapClient = Identity.getSignInClient(activity);
         signInRequest = BeginSignInRequest.builder()
-                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                .setGoogleIdTokenRequestOptions(
+                        BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                         .setSupported(true)
                         .setServerClientId(activity.getString(R.string.SERVER_CLIENT_ID))
                         .setFilterByAuthorizedAccounts(true)
                         .build()
-                ).setPasswordRequestOptions(BeginSignInRequest.PasswordRequestOptions.builder()
+                )
+                .setPasswordRequestOptions(
+                        BeginSignInRequest.PasswordRequestOptions.builder()
                         .setSupported(true)
                         .build()
-                ).setAutoSelectEnabled(true)
+                )
+                .setAutoSelectEnabled(true)
                 .build();
 
         oneTapClient.beginSignIn(signInRequest)
@@ -101,8 +87,20 @@ public class LoginHelper {
                             activity.getString(R.string.ONE_TAP_UI_ERROR),
                             Toast.LENGTH_LONG
                     ).show();
-                    oneTapUI = false;
                 });
+    }
+
+    public void register(AuthModel model) {
+        auth.createUserWithEmailAndPassword(model.getEmail(), model.getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    user = auth.getCurrentUser();
+                    AuthController controller = new AuthController(model);
+                    controller.create();
+                }
+            }
+        });
     }
 
     public void loginWithEmailAndPassword(String email, String password) {
@@ -122,41 +120,6 @@ public class LoginHelper {
                 });
     }
 
-    public void loginWithOneTap(@Nullable Intent data) {
-        try {
-            SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(data);
-            idToken = credential.getGoogleIdToken();
-            email = credential.getId();
-            password = credential.getPassword();
-
-            AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-            auth.signInWithCredential(firebaseCredential)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "loginWithCredential : Success");
-                            activity.startActivity(new Intent(activity, MainActivity.class));
-                        }
-                        else Log.w(TAG, "loginWithCredential : Fail");
-                    });
-        }
-        catch (ApiException e) {
-            switch (e.getStatusCode()) {
-                case CommonStatusCodes.CANCELED:
-                    Log.d(TAG, "One Tap Dialog Closed");
-                    oneTapUI = false;
-                    makeToast(R.integer.LOGIN_CANCELED);
-                    break;
-                case CommonStatusCodes.NETWORK_ERROR:
-                    Log.d(TAG, "One Tap Encountered an Error");
-                    makeToast(R.integer.NETWORK_ERROR);
-                    break;
-                default:
-                    Log.d(TAG, "Failed Getting Credential");
-                    break;
-            }
-        }
-    }
-
     public void makeToast(int loginStatus) {
         String text = null;
         switch (loginStatus) {
@@ -174,10 +137,6 @@ public class LoginHelper {
 
             case R.integer.NETWORK_ERROR:
                 text = activity.getString(R.string.NETWORK_ERROR);
-                break;
-
-            case R.integer.ONE_TAP_UI_ERROR:
-                text = activity.getString(R.string.ONE_TAP_UI_ERROR);
                 break;
 
             case R.integer.LOGIN_FAILED:
