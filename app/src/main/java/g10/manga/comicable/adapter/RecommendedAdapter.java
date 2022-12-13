@@ -13,12 +13,11 @@ import androidx.annotation.NonNull;
 import java.util.List;
 
 import g10.manga.comicable.helper.ImageHelper;
-import g10.manga.comicable.model.manga.ListModel;
-import g10.manga.comicable.model.manga.PopularModel;
+import g10.manga.comicable.model.manga.RecommendedModel;
 
-public class PopularAdapter extends ArrayAdapter<PopularModel> {
+public class RecommendedAdapter extends ArrayAdapter<RecommendedModel> {
 
-    private List<PopularModel> data;
+    private List<RecommendedModel> data;
     private Context context;
     private int layoutId;
     private int tvTitleId;
@@ -26,7 +25,7 @@ public class PopularAdapter extends ArrayAdapter<PopularModel> {
     private int tvDescId;
     private int tvTypeId;
 
-    public PopularAdapter(@NonNull Context context, int resource, @NonNull List<PopularModel> objects, int tvTitleId, int imageViewId, int tvDescId, int tvTypeId) {
+    public RecommendedAdapter(@NonNull Context context, int resource, @NonNull List<RecommendedModel> objects, int tvTitleId, int imageViewId, int tvDescId, int tvTypeId) {
         super(context, resource, objects);
         this.data = objects;
         this.context = context;
