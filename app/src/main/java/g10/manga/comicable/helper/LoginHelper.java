@@ -9,6 +9,7 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
@@ -20,39 +21,30 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import g10.manga.comicable.R;
 import g10.manga.comicable.activity.MainActivity;
+import g10.manga.comicable.crud.auth.CreateData;
+import g10.manga.comicable.model.AuthModel;
 
 public class LoginHelper {
 
     private Activity activity;
-
     private FirebaseAuth auth;
-
-    SignInClient oneTapClient;
-    BeginSignInRequest signInRequest;
+    private FirebaseUser user;
+    private SignInClient oneTapClient;
+    private BeginSignInRequest signInRequest;
 
     private String idToken = null;
     private String email = null;
     private String password = null;
-
-    private boolean oneTapUI = true;
-
-    public boolean isOneTapUI() {
-        return oneTapUI;
-    }
-
-    public void setOneTapUI(boolean status) {
-        this.oneTapUI = status;
-        if (oneTapUI)
-            beginSignInRequest();
-    }
 
     public boolean isLoggedIn() {
         return auth.getCurrentUser() != null;
@@ -105,8 +97,20 @@ public class LoginHelper {
                             activity.getString(R.string.ONE_TAP_UI_ERROR),
                             Toast.LENGTH_LONG
                     ).show();
-                    oneTapUI = false;
                 });
+    }
+
+    public void register(AuthModel model) {
+        auth.createUserWithEmailAndPassword(model.getEmail(), model.getPassword()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    user = auth.getCurrentUser();
+                    CreateData createData = new CreateData(user, model);
+                    createData.create(model);
+                }
+            }
+        });
     }
 
     public void loginWithEmailAndPassword(String email, String password) {
