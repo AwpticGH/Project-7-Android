@@ -6,5 +6,7 @@
     <integer name="LOGIN_CANCELED">16</integer>
     <integer name="NETWORK_ERROR">7</integer>
     <integer name="LOGOUT_SUCCESSFUL">2</integer>
+    <integer name="UPDATE_USER_SUCCESSFUL">33</integer>
+    <integer name="UPDATE_USER_FAILED">34</integer>
     <integer name="ONE_TAP_UI_ERROR">4</integer>
 </resources>

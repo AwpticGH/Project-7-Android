@@ -1,32 +1,33 @@
 package g10.manga.comicable.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.List;
 
 import g10.manga.comicable.R;
-import g10.manga.comicable.api.MangaApi;
 import g10.manga.comicable.call.ListCall;
 import g10.manga.comicable.call.PopularCall;
 import g10.manga.comicable.call.RecommendedCall;
-import g10.manga.comicable.helper.LoginHelper;
+import g10.manga.comicable.controller.AuthController;
+import g10.manga.comicable.model.AuthModel;
 import g10.manga.comicable.model.manga.ListModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseUser user;
-    LoginHelper helper;
+    AuthController controller;
+    AuthModel model;
 
     RecyclerView recyclerView;
     TextView textResult;
@@ -45,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        helper = LoginActivity.getLoginHelper();
-        user = helper.getCurrentUser();
+        controller = new AuthController(this);
 
         listCall = new ListCall(getString(R.string.MANGA_API_BASE_URL));
         popularCall = new PopularCall(getString(R.string.MANGA_API_BASE_URL));
@@ -60,14 +60,21 @@ public class MainActivity extends AppCompatActivity {
 
         intentLogout = new Intent(this, LoginActivity.class);
 
-        textResult.setText(user.getEmail());
+        controller.read(FirebaseAuth.getInstance().getCurrentUser(), new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                model = task.getResult().getValue(AuthModel.class);
+                textResult.setText((model != null)
+                        ? model.getName()
+                        : FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            }
+        });
 
         btnLogout.setOnClickListener(view -> {
-            helper.getAuth().signOut();
-            helper.setOneTapUI(false);
+            FirebaseAuth.getInstance().signOut();
             startActivity(intentLogout);
             finish();
-            helper.makeToast(R.integer.LOGOUT_SUCCESSFUL);
+            controller.makeToast(R.integer.LOGOUT_SUCCESSFUL);
         });
     }
 
@@ -75,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (user == null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             startActivity(intentLogout);
             finish();
         }

@@ -8,6 +8,8 @@
     <string name="NETWORK_ERROR">Network Error. Try Again Later!</string>
     <string name="LOGOUT_SUCCESSFUL">Logout Success</string>
     <string name="ONE_TAP_UI_ERROR">OneTapUI Failed Due To Too Many Canceled Sign-In Attempts</string>
+    <string name="UPDATE_USER_SUCCESSFUL">Profile Has Been Updated</string>
+    <string name="UPDATE_USER_FAILED">Update Failed, Please Try Again</string>
     <!-- Strings for api -->
     <string name="MANGA_API_BASE_URL">https://komiku-api.fly.dev/api/comic/</string>
     <string name="title_activity_info">InfoActivity</string>

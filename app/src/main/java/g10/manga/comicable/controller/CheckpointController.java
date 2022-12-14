@@ -19,61 +19,51 @@ import g10.manga.comicable.model.CheckpointModel;
 
 public class CheckpointController {
 
-    private final String DB_URL = "https://console.firebase.google.com/u/1/project/ccit-project-c68fc/database/ccit-project-c68fc-default-rtdb/data/~2F";
+    private final String DB_URL = "https://ccit-project-c68fc-default-rtdb.asia-southeast1.firebasedatabase.app/";
     private final String DB_REFERENCE = "Checkpoint";
     private List<CheckpointModel> checkpoints;
     private CheckpointModel checkpoint;
     private DatabaseReference dbReference;
+    private Task<DataSnapshot> task;
 
     public CheckpointController() {
         dbReference = FirebaseDatabase.getInstance(DB_URL).getReference(DB_REFERENCE);
     }
 
-    public void create(AuthModel user, CheckpointModel checkpoint) {
-        String pushId = dbReference.push().getKey();
-        checkpoint.setId(pushId);
-
-        dbReference.child(user.getId()).child(checkpoint.getId()).setValue(checkpoint);
+    public void create(AuthModel authModel, CheckpointModel checkpoint) {
+        dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).child(checkpoint.getChapter().getName()).setValue(checkpoint);
     }
 
-    public List<CheckpointModel> readAll(AuthModel user) {
-        dbReference.child(user.getId()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        task.getResult().getChildren().forEach(new Consumer<DataSnapshot>() {
-                            @Override
-                            public void accept(DataSnapshot dataSnapshot) {
-                                checkpoints = new ArrayList<>();
+    public Task<DataSnapshot> readAll(AuthModel authModel) {
+        return dbReference.child(authModel.getId()).get()
+                // copas ini ke activitynya
+                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            checkpoints = new ArrayList<>();
+                            for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
                                 checkpoints.add(dataSnapshot.getValue(CheckpointModel.class));
                             }
-                        });
+                        }
                     }
-                }
-            }
-        });
-
-        return checkpoints;
+                });
     }
 
-    public CheckpointModel read(AuthModel user, String id) {
-        dbReference.child(user.getId()).child(id).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful())
-                    checkpoint = task.getResult().getValue(CheckpointModel.class);
-            }
-        });
-
-        return checkpoint;
+    public Task<DataSnapshot> read(AuthModel authModel, String mangaTitle, String chapterName, OnCompleteListener<DataSnapshot> onCompleteListener) {
+        return dbReference.child(authModel.getId())
+                .child(mangaTitle)
+                .child(chapterName)
+                .get()
+                // copas ini ke activitynya
+                .addOnCompleteListener(onCompleteListener);
     }
 
-    public void update(AuthModel user, CheckpointModel checkpoint) {
-        dbReference.child(user.getId()).child(checkpoint.getId()).setValue(checkpoint);
+    public void update(AuthModel authModel, CheckpointModel checkpoint) {
+        dbReference.child(authModel.getId()).child(checkpoint.getId()).setValue(checkpoint);
     }
 
-    public void delete(AuthModel user, CheckpointModel checkpoint) {
-        dbReference.child(user.getId()).child(checkpoint.getId()).removeValue();
+    public void delete(AuthModel authModel, CheckpointModel checkpoint) {
+        dbReference.child(authModel.getId()).child(checkpoint.getId()).removeValue();
     }
 }

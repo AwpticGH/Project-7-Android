@@ -1,34 +1,18 @@
 package g10.manga.comicable.activity;
 
-import static android.content.ContentValues.TAG;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import g10.manga.comicable.R;
-import g10.manga.comicable.helper.LoginHelper;
+import g10.manga.comicable.controller.AuthController;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -42,10 +26,10 @@ public class LoginActivity extends AppCompatActivity {
     private Intent intentLogin;
     private Intent intentRegister;
 
-    private static LoginHelper helper;
+    private static AuthController controller;
 
-    public static LoginHelper getLoginHelper() {
-        return helper;
+    public static AuthController getLoginHelper() {
+        return controller;
     }
 
     @Override
@@ -54,8 +38,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
-        if (helper == null)
-            helper = new LoginHelper(this, mAuth);
+        if (controller == null)
+            controller = new AuthController(this);
 
         intentLogin = new Intent(this, MainActivity.class);
         intentRegister = new Intent(this, RegisterActivity.class);
@@ -69,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
             String email = inputEmail.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
 
-            helper.loginWithEmailAndPassword(email, password);
+            controller.loginWithEmailAndPassword(email, password);
         });
 
         btnRegister.setOnClickListener(view -> startActivity(intentRegister));
@@ -79,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        if (helper.isLoggedIn()) {
+        if (controller.isLoggedIn()) {
             startActivity(intentLogin);
             finish();
         }
@@ -91,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
         switch (resultCode) {
             case Activity.RESULT_OK:
-                helper.makeToast(R.integer.LOGOUT_SUCCESSFUL);
+                controller.makeToast(R.integer.LOGOUT_SUCCESSFUL);
                 break;
         }
     }

@@ -16,9 +16,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import g10.manga.comicable.R;
+import g10.manga.comicable.controller.AuthController;
+import g10.manga.comicable.model.AuthModel;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -27,46 +28,34 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText inputName;
     private Button btnRegister;
 
+    private AuthModel authModel;
     private FirebaseAuth mAuth;
+    private AuthController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
+        if (controller == null)
+            controller = new AuthController(this);
 
         inputEmail = findViewById(R.id.input_register_email);
         inputPassword = findViewById(R.id.input_register_password);
         inputName = findViewById(R.id.input_register_name);
         btnRegister = findViewById(R.id.button_register);
 
-        Intent intent = new Intent(this, LoginActivity.class);
-
         btnRegister.setOnClickListener(view -> {
             String email = inputEmail.getText().toString().trim();
             String password = inputPassword.getText().toString().trim();
             String name = inputName.getText().toString().trim();
 
-            mAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "createUserWithEmailAndPassword:success");
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                startActivity(intent);
-                                finish();
-                            }
-                            else {
-                                Log.w(TAG, "createUseWithEmailAndPassword:failure", task.getException());
-                                Toast.makeText(
-                                        getApplicationContext(),
-                                        "Register Failed",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-                            }
-                        }
-                    });
+            authModel = new AuthModel();
+            authModel.setEmail(email);
+            authModel.setPassword(password);
+            authModel.setName(name);
+
+            controller.create(authModel);
         });
     }
 }
