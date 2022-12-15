@@ -99,6 +99,8 @@ public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSel
 
             public void onNothingSelected(AdapterView<?> parent) { }
         });
+        if (page == null)
+            page = "1";
 
         recyclerView = rootView.findViewById(R.id.rvTerbaru);
         recyclerView.setHasFixedSize(true);
