@@ -84,7 +84,7 @@ public class ChapterActivity extends AppCompatActivity {
         }
     }
 
-    private void getChapterImage() {
+    private void getChapter() {
         progressDialog.show();
 //        AndroidNetworking.get(ApiEndpoint.CHAPTERURL)
 //                .addPathParameter("chapter_endpoint", ChapterEndpoint)

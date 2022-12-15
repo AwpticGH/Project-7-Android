@@ -12,6 +12,6 @@
 
     <item
         android:id="@+id/navigation_setting"
-        android:icon="@drawable/ic_launcher_background"
+        android:icon="@drawable/ic_favorite_heart_button_filled"
         android:title="Favorite" />
 </menu>
