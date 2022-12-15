@@ -33,10 +33,10 @@ public interface MangaApi {
     Call<RecommendedResponse> getRecommendedComics(@Path("pageNumber") int pageNumber);
 
     // Get Comic Info
-    @GET("info/manga/{endpoint}")
-    Call<InfoResponse> getComicInfo(@Path("endpoint") String endpoint);
+    @GET("info/{endpoint}")
+    Call<InfoResponse> getComicInfo(@Path("endpoint") String infoEndpoint);
 
     // Get Chapter Detail
     @GET("chapter/{endpoint}")
-    Call<ChapterResponse> getChapterDetail(@Path("endpoint") String endpoint);
+    Call<ChapterResponse> getChapterDetail(@Path("endpoint") String chapterEndpoint);
 }

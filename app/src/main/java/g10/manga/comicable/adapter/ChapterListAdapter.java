@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import g10.manga.comicable.R;
 import g10.manga.comicable.helper.ImageHelper;
 import g10.manga.comicable.model.manga.ChapterListModel;
 import g10.manga.comicable.model.manga.PopularModel;
@@ -38,7 +39,8 @@ public class ChapterListAdapter extends RecyclerView.Adapter<ChapterListAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item_chapter, parent, false);
         return new ViewHolder(view, layoutId, btnChapterNameId);
     }
 

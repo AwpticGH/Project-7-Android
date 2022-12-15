@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import g10.manga.comicable.R;
@@ -42,7 +43,7 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
 
     private Toolbar toolbar;
     private RecyclerView recyclerView;
-    private TextView tvTitle, tvType, tvAuthor, tvStatus, tvRating, tvStatus2;
+    private TextView tvTitle, tvType, tvAuthor, tvStatus, tvRating, tvGenre;
     private ImageView imgViewThumbnail;
 
     private String infoEndpoint;
@@ -79,19 +80,20 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
 //        setSupportActionBar(toolbar);
 //        assert getSupportActionBar() != null;
 
-        imgViewThumbnail = findViewById(R.id.imgCover);
-        tvTitle = findViewById(R.id.tvTitle);
+        imgViewThumbnail = findViewById(R.id.imgPhoto);
+        tvTitle = findViewById(R.id.tvName);
         tvAuthor = findViewById(R.id.tvNameAuthor);
         tvType = findViewById(R.id.tvType);
         tvStatus = findViewById(R.id.tvStatus);
         tvRating = findViewById(R.id.tvRating);
-        tvStatus2 = findViewById(R.id.tvStatus2);
+        tvGenre = findViewById(R.id.tvStatus2);
 
         recyclerView = findViewById(R.id.rvChapter);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         infoEndpoint = getIntent().getStringExtra("endpoint");
+        Log.d("InfoActivity", "info endpoint : " + infoEndpoint);
 
         if (infoEndpoint != null) {
             progressDialog.show();
@@ -108,6 +110,7 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
                         tvStatus.setText(infoModel.getStatus());
                         tvRating.setText(infoModel.getRating());
                         tvStatus.setText(infoModel.getStatus());
+                        tvGenre.setText((infoModel.getGenres() != null) ? infoModel.getGenres().toString() : "Not Available");
 
                         Glide.with(getApplicationContext())
                                 .load(infoModel.getThumbnail())
@@ -121,6 +124,13 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
                             model.setName("Not Available");
                             chapterList.add(model);
                         }
+
+                        Log.d("InfoActivity", "Title : " + infoModel.getTitle());
+                        Log.d("InfoActivity", "Author : " + infoModel.getAuthor());
+                        Log.d("InfoActivity", "Type : " + infoModel.getType());
+                        Log.d("InfoActivity", "Status : " + infoModel.getStatus());
+                        Log.d("InfoActivity", "Rating : " + infoModel.getRating());
+                        Log.d("InfoActivity", "Thumbnail : " + infoModel.getThumbnail());
 
                         getChapters(chapterList);
                     }
@@ -145,6 +155,15 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
                     finish();
                 }
             });
+        }
+        else {
+            Toast.makeText(
+                    getApplicationContext(),
+                    "Comic Info Not Available",
+                    Toast.LENGTH_SHORT
+            ).show();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
         }
     }
 

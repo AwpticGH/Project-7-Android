@@ -180,7 +180,7 @@ public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSel
     @Override
     public void onSelected(PopularModel model) {
         Intent intent = new Intent(getActivity(), InfoActivity.class);
-        intent.putExtra("mangaModel", model);
+        intent.putExtra("endpoint", model.getEndpoint());
         startActivity(intent);
     }
 }
