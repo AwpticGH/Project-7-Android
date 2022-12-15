@@ -1,10 +1,13 @@
 package g10.manga.comicable.model.manga;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 public class ChapterModel extends BaseModel {
 
     private String title;
+    @SerializedName("image")
     private ArrayList<String> images;
 
     public String getTitle() {

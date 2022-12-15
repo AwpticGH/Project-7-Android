@@ -3,6 +3,7 @@ package g10.manga.comicable.fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.github.islamkhsh.CardSliderViewPager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,16 +26,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import g10.manga.comicable.R;
-import g10.manga.comicable.utils.LayoutMarginDecoration;
-import g10.manga.comicable.utils.Tools;
+import g10.manga.comicable.activity.InfoActivity;
+import g10.manga.comicable.adapter.ListAdapter;
+import g10.manga.comicable.call.ListCall;
+import g10.manga.comicable.model.manga.ListModel;
+import g10.manga.comicable.response.ListResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class GenreFragment extends Fragment {
+public class GenreFragment extends Fragment implements ListAdapter.OnObjectSelected {
 
-    private RecyclerView rvGenre;
-//    private AdapterGenre adapterGenre;
+    private RecyclerView recyclerView;
+    private ListAdapter adapter;
     private ProgressDialog progressDialog;
-    private LayoutMarginDecoration gridMargin;
-//    private List<ModelGenre> modelGenre = new ArrayList<>();
+    private CardSliderViewPager cardSliderViewPager;
+
+    private List<ListModel> models;
+    private ListCall call;
 
     public GenreFragment() {
 
@@ -52,59 +64,51 @@ public class GenreFragment extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Sedang menampilkan data");
 
-        rvGenre = rootView.findViewById(R.id.rvGenre);
-        rvGenre.setHasFixedSize(true);
-        GridLayoutManager mLayoutManager = new GridLayoutManager(getActivity(),
-                3, RecyclerView.VERTICAL, false);
-        rvGenre.setLayoutManager(mLayoutManager);
-        gridMargin = new LayoutMarginDecoration(3, Tools.dp2px(getActivity(), 12));
-        rvGenre.addItemDecoration(gridMargin);
-        getGenre();
+        cardSliderViewPager = rootView.findViewById(R.id.viewPager);
 
-    }
+        recyclerView = rootView.findViewById(R.id.rvGenre);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-    private void getGenre() {
+        call = new ListCall(getString(R.string.MANGA_API_BASE_URL));
         progressDialog.show();
-//        AndroidNetworking.get(ApiEndpoint.GENREURL)
-//                .setPriority(Priority.HIGH)
-//                .build()
-//                .getAsJSONObject(new JSONObjectRequestListener() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            progressDialog.dismiss();
-//                            JSONArray playerArray = response.getJSONArray("list_genre");
-//                            for (int i = 0; i < playerArray.length(); i++) {
-//                                JSONObject temp = playerArray.getJSONObject(i);
-//                                ModelGenre dataApi = new ModelGenre();
-//                                dataApi.setTitle(temp.getString("title"));
-//                                dataApi.setEndpoint(temp.getString("endpoint"));
-//                                modelGenre.add(dataApi);
-//                                showGenre();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                            Toast.makeText(getActivity(), "Gagal menampilkan data!", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(ANError anError) {
-//                        progressDialog.dismiss();
-//                        Toast.makeText(getActivity(), "Tidak ada jaringan internet!", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+        call.getAllComics().enqueue(new Callback<ListResponse>() {
+            @Override
+            public void onResponse(Call<ListResponse> call, Response<ListResponse> response) {
+                assert response.body() != null;
+                if (response.body().isSuccess()) {
+                    models = response.body().getLists();
+                    setAdapter(models);
+                    progressDialog.dismiss();
+                }
+                else {
+                    progressDialog.dismiss();
+                    Toast.makeText(
+                            getActivity(),
+                            "Failed Getting Resources",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListResponse> call, Throwable t) {
+                Log.e("PopularCall", "Fail : [" + t.getLocalizedMessage() + "]");
+            }
+        });
     }
 
-//    private void showGenre() {
-//        adapterGenre = new AdapterGenre(getActivity(), modelGenre, this);
-//        rvGenre.setAdapter(adapterGenre);
-//    }
-//
-//    @Override
-//    public void onSelected(ModelGenre modelGenre) {
-//        Intent intent = new Intent(getActivity(), ListGenreActivity.class);
-//        intent.putExtra("listGenre", modelGenre);
-//        startActivity(intent);
-//    }
+    private void setAdapter(List<ListModel> models) {
+        adapter = new ListAdapter(models, getActivity().getApplicationContext(), this,
+                R.id.cvList, R.id.tvTitle, R.id.ivThumbnail);
+        recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onObjectSelected(ListModel model) {
+        Intent intent = new Intent(getActivity(), InfoActivity.class);
+        intent.putExtra("endpoint", model.getEndpoint());
+        startActivity(intent);
+    }
 }

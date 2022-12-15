@@ -6,12 +6,17 @@
         android:title="Home" />
 
     <item
+        android:id="@+id/navigation_null"
+        android:title=""
+        />
+
+    <item
         android:id="@+id/navigation_list"
         android:icon="@drawable/ic_list"
         android:title="List" />
 
-    <item
-        android:id="@+id/navigation_setting"
-        android:icon="@drawable/ic_favorite_heart_button_filled"
-        android:title="Favorite" />
+<!--    <item-->
+<!--        android:id="@+id/navigation_favorite"-->
+<!--        android:icon="@drawable/ic_favorite_heart_button_filled"-->
+<!--        android:title="Favorite" />-->
 </menu>

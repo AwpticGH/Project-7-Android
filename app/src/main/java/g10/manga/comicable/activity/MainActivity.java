@@ -14,11 +14,13 @@ import android.widget.TextView;
 import com.akshay.library.CurveBottomBar;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 
 import g10.manga.comicable.R;
 import g10.manga.comicable.controller.AuthController;
+import g10.manga.comicable.fragment.FavoriteFragment;
 import g10.manga.comicable.fragment.GenreFragment;
 import g10.manga.comicable.fragment.HomeFragment;
 import g10.manga.comicable.model.AuthModel;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Fragment fragment;
     private CurveBottomBar navigation;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
 
                 CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
                 layoutParams.setBehavior(new BottomBarBehavior());
+
+                fab = findViewById(R.id.fab);
+                fab.setOnClickListener(view -> {
+                    fragment = new FavoriteFragment();
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.frameContainer, fragment, fragment.getClass().getSimpleName())
+                            .commit();
+                    navigation.setSelectedItemId(R.id.navigation_null);
+                });
 
                 tvToolbar = findViewById(R.id.text_toolbar);
                 String greeting = "Halo, \n" + authModel.getName();
@@ -78,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final CurveBottomBar.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new CurveBottomBar.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
@@ -97,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
                             .replace(R.id.frameContainer, fragment, fragment.getClass().getSimpleName())
                             .commit();
                     return true;
+
+
             }
             return false;
         }

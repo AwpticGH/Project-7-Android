@@ -42,6 +42,7 @@ import g10.manga.comicable.model.AuthModel;
 import g10.manga.comicable.model.CheckpointModel;
 import g10.manga.comicable.model.manga.ChapterListModel;
 import g10.manga.comicable.model.manga.InfoModel;
+import g10.manga.comicable.model.manga.PopularModel;
 import g10.manga.comicable.response.InfoResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,8 +62,8 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
     private ProgressDialog progressDialog;
     private List<ChapterListModel> chapterList;
 
-    private CheckpointController checkpointController;
-    private CheckpointModel checkpointModel;
+    private static CheckpointController checkpointController;
+    private static CheckpointModel checkpointModel;
     private boolean favorite;
 
     @Override
@@ -195,7 +196,8 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
             else {
                 checkpointModel = new CheckpointModel();
                 checkpointModel.setUser(MainActivity.getAuthModel());
-                checkpointModel.setManga(infoModel);
+                PopularModel popularModel = (PopularModel) getIntent().getSerializableExtra("comic");
+                checkpointModel.setManga(popularModel);
                 checkpointController.create(MainActivity.getAuthModel(), checkpointModel);
                 ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled));
                 favorite = true;
@@ -256,5 +258,13 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
                 }
             }
         });
+    }
+
+    public static CheckpointController getCheckpointController() {
+        return checkpointController;
+    }
+
+    public static CheckpointModel getCheckpointModel() {
+        return checkpointModel;
     }
 }

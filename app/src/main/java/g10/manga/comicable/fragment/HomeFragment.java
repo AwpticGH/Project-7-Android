@@ -49,14 +49,11 @@ public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSel
     private RecyclerView recyclerView;
     private SliderAdapter sliderAdapter;
     private PopularAdapter popularAdapter;
-//    private AdapterKomik adapterKomik;
     private ProgressDialog progressDialog;
     private CardSliderViewPager cardSliderViewPager;
     private List<PopularModel> popularModels = new ArrayList<>();
     private List<SliderModel> sliderModels = new ArrayList<>();
     private PopularCall popularCall;
-//    private List<ModelKomik> modelKomik = new ArrayList<>();
-//    private List<ModelSlider> modelSlider = new ArrayList<>();
     private TextView greetText;
     private Spinner spPage;
     private String[] numberPage = {"1", "2", "3", "4", "5"
@@ -149,7 +146,7 @@ public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSel
                     cardSliderViewPager.setAdapter(sliderAdapter);
 
                     // Popular Comics
-                    getComics();
+                    setAdapter(popularModels);
 
                     progressDialog.dismiss();
                 }
@@ -170,8 +167,8 @@ public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSel
         });
     }
 
-    private void getComics() {
-        popularAdapter = new PopularAdapter(popularModels, getActivity(), this,
+    private void setAdapter(List<PopularModel> models) {
+        popularAdapter = new PopularAdapter(models, getActivity(), this,
                 R.id.cvTerbaru, R.id.tvTitle, R.id.imgPhoto, R.id.tvDate, R.id.tvType);
         recyclerView.setAdapter(popularAdapter);
         popularAdapter.notifyDataSetChanged();
@@ -181,6 +178,7 @@ public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSel
     public void onSelected(PopularModel model) {
         Intent intent = new Intent(getActivity(), InfoActivity.class);
         intent.putExtra("endpoint", model.getEndpoint());
+        intent.putExtra("comic", model);
         startActivity(intent);
     }
 }

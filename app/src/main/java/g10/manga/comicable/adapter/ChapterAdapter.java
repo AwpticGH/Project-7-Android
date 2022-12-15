@@ -2,6 +2,7 @@ package g10.manga.comicable.adapter;
 
 import android.content.Context;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,7 @@ public class ChapterAdapter extends PagerAdapter {
         String txtPagination = "Hal. " + position;
         tvPagination.setText(txtPagination);
 
+        Log.d(getClass().getSimpleName(), "Image Endpoint : " + image);
         Glide.with(context)
                 .load(image)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

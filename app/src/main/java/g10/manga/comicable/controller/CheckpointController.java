@@ -1,6 +1,7 @@
 package g10.manga.comicable.controller;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -32,49 +33,28 @@ public class CheckpointController {
     }
 
     public void create(AuthModel authModel, CheckpointModel checkpoint) {
-        if (checkpoint.getChapter() != null)
-            dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).child(checkpoint.getChapter().getName()).setValue(checkpoint);
-        else
-            dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).setValue(checkpoint);
+        dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).setValue(checkpoint);
     }
 
     public Task<DataSnapshot> readAll(AuthModel authModel) {
-        return dbReference.child(authModel.getId()).get()
-                // copas ini ke activitynya
-                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            checkpoints = new ArrayList<>();
-                            for (DataSnapshot dataSnapshot : task.getResult().getChildren()) {
-                                checkpoints.add(dataSnapshot.getValue(CheckpointModel.class));
-                            }
-                        }
-                    }
-                });
+        return dbReference.child(authModel.getId()).get();
     }
 
     public Task<DataSnapshot> read(AuthModel authModel, String mangaTitle, OnCompleteListener<DataSnapshot> onCompleteListener) {
-        return dbReference.child(authModel.getId())
-                .child(mangaTitle)
-                .get()
-                .addOnCompleteListener(onCompleteListener);
-    }
+        if (mangaTitle.contains(".") || mangaTitle.contains("#")
+                || mangaTitle.contains("$") || mangaTitle.contains("[")
+                || mangaTitle.contains("]"))
+            mangaTitle = mangaTitle.replace(".", "-");
+        Log.d(getClass().getSimpleName(), "mangaTitle : " + mangaTitle);
 
-    public Task<DataSnapshot> read(AuthModel authModel, String mangaTitle, String chapterName, OnCompleteListener<DataSnapshot> onCompleteListener) {
         return dbReference.child(authModel.getId())
                 .child(mangaTitle)
-                .child(chapterName)
                 .get()
-                // copas ini ke activitynya
                 .addOnCompleteListener(onCompleteListener);
     }
 
     public void update(AuthModel authModel, CheckpointModel checkpoint) {
-        if (checkpoint.getChapter() != null)
-            dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).child(checkpoint.getChapter().getName()).setValue(checkpoint);
-        else
-            dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).setValue(checkpoint);
+        dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).setValue(checkpoint);
     }
 
     public void delete(AuthModel authModel, CheckpointModel checkpoint) {

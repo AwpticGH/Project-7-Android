@@ -25,6 +25,8 @@ import java.util.List;
 import g10.manga.comicable.R;
 import g10.manga.comicable.adapter.ChapterAdapter;
 import g10.manga.comicable.call.ChapterCall;
+import g10.manga.comicable.controller.CheckpointController;
+import g10.manga.comicable.model.CheckpointModel;
 import g10.manga.comicable.model.manga.ChapterModel;
 import g10.manga.comicable.response.ChapterResponse;
 import retrofit2.Call;
@@ -44,10 +46,15 @@ public class ChapterActivity extends AppCompatActivity {
     private ChapterModel model;
     private ChapterAdapter adapter;
 
+    private CheckpointModel checkpointModel;
+    private CheckpointController checkpointController;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapter);
+        checkpointController = new CheckpointController();
+        checkpointModel = (CheckpointModel) getIntent().getSerializableExtra("checkpoint");
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Mohon Tunggu");
@@ -85,6 +92,7 @@ public class ChapterActivity extends AppCompatActivity {
         call = new ChapterCall(getString(R.string.MANGA_API_BASE_URL));
         String endpoint = getIntent().getStringExtra("endpoint");
         Log.d(getLocalClassName(), "Chapter Endpoint : " + endpoint);
+
         progressDialog.show();
         call.getChapterDetail(endpoint).enqueue(new Callback<ChapterResponse>() {
             @Override
@@ -95,11 +103,13 @@ public class ChapterActivity extends AppCompatActivity {
                     tvChapterName.setText(model.getTitle());
                     setImage(model);
 
+                    if (checkpointModel != null) {
+                        checkpointModel.setChapter(model);
+                        checkpointController.update(MainActivity.getAuthModel(), checkpointModel);
+                    }
                     progressDialog.dismiss();
 
                 }
-                Log.d("Call Result(success)", "Title : " + model.getTitle());
-                Log.d("Call Result(success)", "Images : " + model.getImages().toString());
             }
 
             @Override
@@ -114,8 +124,8 @@ public class ChapterActivity extends AppCompatActivity {
         });
     }
 
-    private void setImage(ChapterModel model) {
-        adapter = new ChapterAdapter(model, this, R.layout.list_item_detail_chapter, R.id.tvPagination, R.id.imgPhoto);
+    private void setImage(ChapterModel chapterModel) {
+        adapter = new ChapterAdapter(chapterModel, this, R.layout.list_item_detail_chapter, R.id.tvPagination, R.id.imgChapter);
         viewPager.setAdapter(adapter);
     }
 
