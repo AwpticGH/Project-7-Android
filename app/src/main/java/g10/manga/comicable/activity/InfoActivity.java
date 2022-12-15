@@ -65,7 +65,7 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         }
         if (Build.VERSION.SDK_INT >= 21) {
-            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false);
+            setWindowFlag(this, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, true);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
@@ -94,32 +94,38 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
         infoEndpoint = getIntent().getStringExtra("endpoint");
 
         if (infoEndpoint != null) {
+            progressDialog.show();
             infoCall = new InfoCall(getString(R.string.MANGA_API_BASE_URL));
             infoCall.getComicInfo(infoEndpoint).enqueue(new Callback<InfoResponse>() {
                 @Override
                 public void onResponse(Call<InfoResponse> call, Response<InfoResponse> response) {
-                    infoModel = response.body().getInfo();
-                    tvTitle.setText(infoModel.getTitle());
-                    tvAuthor.setText(infoModel.getAuthor());
-                    tvType.setText(infoModel.getType());
-                    tvStatus.setText(infoModel.getStatus());
-                    tvRating.setText(infoModel.getRating());
-                    tvStatus.setText(infoModel.getStatus());
+                    assert response.body() != null;
+                    if (response.body().isSuccess()) {
+                        infoModel = response.body().getInfo();
+                        tvTitle.setText(infoModel.getTitle());
+                        tvAuthor.setText(infoModel.getAuthor());
+                        tvType.setText(infoModel.getType());
+                        tvStatus.setText(infoModel.getStatus());
+                        tvRating.setText(infoModel.getRating());
+                        tvStatus.setText(infoModel.getStatus());
 
-                    Glide.with(getApplicationContext())
-                            .load(infoModel.getThumbnail())
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(imgViewThumbnail);
+                        Glide.with(getApplicationContext())
+                                .load(infoModel.getThumbnail())
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(imgViewThumbnail);
 
-                    chapterList = infoModel.getChapterList();
-                    if (chapterList == null) {
-                        chapterList = new ArrayList<>();
-                        ChapterListModel model = new ChapterListModel();
-                        model.setName("Not Available");
-                        chapterList.add(model);
+                        chapterList = infoModel.getChapterList();
+                        if (chapterList == null) {
+                            chapterList = new ArrayList<>();
+                            ChapterListModel model = new ChapterListModel();
+                            model.setName("Not Available");
+                            chapterList.add(model);
+                        }
+
+                        getChapters(chapterList);
                     }
-
-                    getChapters(chapterList);
+                    else
+                        startMainActivity();
                 }
 
                 @Override
@@ -139,6 +145,12 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
     private void getChapters(List<ChapterListModel> model) {
         chapterListAdapter = new ChapterListAdapter(model, getApplicationContext(), this, R.id.llChapter, R.id.btnChapter);
         recyclerView.setAdapter(chapterListAdapter);
+        progressDialog.dismiss();
+    }
+
+    private void startMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     @Override
