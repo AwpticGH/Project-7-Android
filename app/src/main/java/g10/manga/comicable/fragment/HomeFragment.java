@@ -91,25 +91,23 @@ public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSel
         adpWisata.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spPage.setAdapter(adpWisata);
 
-        spPage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                Object itemDB = parent.getItemAtPosition(pos);
-                page = itemDB.toString();
-            }
-
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-        if (page == null)
-            page = "1";
-
         recyclerView = rootView.findViewById(R.id.rvTerbaru);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         popularCall = new PopularCall(getString(R.string.MANGA_API_BASE_URL));
 
+        spPage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                Object itemDB = parent.getItemAtPosition(pos);
+                page = itemDB.toString();
+                getCall();
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
         getGreeting();
-        getCall();
     }
 
     @SuppressLint("SetTextI18n")
