@@ -76,8 +76,8 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        assert getSupportActionBar() != null;
+//        setSupportActionBar(toolbar);
+//        assert getSupportActionBar() != null;
 
         imgViewThumbnail = findViewById(R.id.imgCover);
         tvTitle = findViewById(R.id.tvTitle);
