@@ -89,7 +89,7 @@ public class ChapterActivity extends AppCompatActivity {
         call.getChapterDetail(endpoint).enqueue(new Callback<ChapterResponse>() {
             @Override
             public void onResponse(Call<ChapterResponse> call, Response<ChapterResponse> response) {
-                assert response.body() != null;
+
                 if (response.body().isSuccess()) {
                     model = response.body().getChapter();
                     tvChapterName.setText(model.getTitle());
@@ -97,9 +97,9 @@ public class ChapterActivity extends AppCompatActivity {
 
                     progressDialog.dismiss();
 
-                    Log.d("Call Result(success)", "Title : " + model.getTitle());
-                    Log.d("Call Result(success)", "Images : " + model.getImages().toString());
                 }
+                Log.d("Call Result(success)", "Title : " + model.getTitle());
+                Log.d("Call Result(success)", "Images : " + model.getImages().toString());
             }
 
             @Override
