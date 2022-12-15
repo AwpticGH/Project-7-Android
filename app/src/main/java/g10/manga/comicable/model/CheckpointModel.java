@@ -1,9 +1,11 @@
 package g10.manga.comicable.model;
 
+import java.io.Serializable;
+
 import g10.manga.comicable.model.manga.ChapterListModel;
 import g10.manga.comicable.model.manga.InfoModel;
 
-public class CheckpointModel {
+public class CheckpointModel implements Serializable {
 
     private String id;
     private AuthModel user;

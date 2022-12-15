@@ -67,7 +67,7 @@ public class ChapterAdapter extends PagerAdapter {
         tvPagination.setText(txtPagination);
 
         Glide.with(context)
-                .load(data.getImages().get(position))
+                .load(image)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .override(Target.SIZE_ORIGINAL)
                 .into(imageView);

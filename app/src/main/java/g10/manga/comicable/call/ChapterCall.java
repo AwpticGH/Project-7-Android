@@ -16,26 +16,24 @@ public class ChapterCall extends BaseCall {
         super(url);
     }
 
-    public ChapterModel getChapterDetail(String endpoint) {
-        Call<ChapterResponse> call = api.getChapterDetail(endpoint);
-        call.enqueue(new Callback<ChapterResponse>() {
-            @Override
-            public void onResponse(Call<ChapterResponse> call, Response<ChapterResponse> response) {
-                assert response.body() != null;
-                if (response.body().isSuccess()) {
-                    chapter = response.body().getChapter();
-
-                    Log.d("Call Result(success)", "Title : " + chapter.getTitle());
-                    Log.d("Call Result(success)", "Images : " + chapter.getImages().toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ChapterResponse> call, Throwable t) {
-                Log.e("Call Result(fail)", t.getLocalizedMessage());
-            }
-        });
-
-        return chapter;
+    public Call<ChapterResponse> getChapterDetail(String endpoint) {
+        return api.getChapterDetail(endpoint);
+//        call.enqueue(new Callback<ChapterResponse>() {
+//            @Override
+//            public void onResponse(Call<ChapterResponse> call, Response<ChapterResponse> response) {
+//                assert response.body() != null;
+//                if (response.body().isSuccess()) {
+//                    chapter = response.body().getChapter();
+//
+//                    Log.d("Call Result(success)", "Title : " + chapter.getTitle());
+//                    Log.d("Call Result(success)", "Images : " + chapter.getImages().toString());
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ChapterResponse> call, Throwable t) {
+//                Log.e("Call Result(fail)", t.getLocalizedMessage());
+//            }
+//        });
     }
 }

@@ -1,7 +1,9 @@
 package g10.manga.comicable.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -21,17 +23,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import g10.manga.comicable.R;
+import g10.manga.comicable.adapter.ChapterAdapter;
+import g10.manga.comicable.call.ChapterCall;
 import g10.manga.comicable.model.manga.ChapterModel;
+import g10.manga.comicable.response.ChapterResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChapterActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
-    TextView tvChapterName;
-    ImageView imgChapter;
-    ChapterModel model;
-    ViewPager viewPager;
-    Button btnNext, btnPrev;
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
+    private Toolbar toolbar;
+    private TextView tvChapterName;
+    private ImageView imgChapter;
+    private ViewPager viewPager;
+    private Button btnNext, btnPrev;
+
+    private ChapterCall call;
+    private ChapterModel model;
+    private ChapterAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,81 +60,63 @@ public class ChapterActivity extends AppCompatActivity {
 //        assert getSupportActionBar() != null;
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (model != null) {
-//            String endpoint = modelChapter.getChapterEndpoint();
-//            Title = modelChapter.getChapterTitle();
+        tvChapterName = findViewById(R.id.tvTitle);
+        tvChapterName.setSelected(true);
 
-            tvChapterName = findViewById(R.id.tvTitle);
-//            tvChapterName.setText(Title);
-            tvChapterName.setSelected(true);
+        viewPager = findViewById(R.id.viewPager);
+        btnNext = findViewById(R.id.btnNext);
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentItem = viewPager.getCurrentItem();
+                viewPager.setCurrentItem(currentItem + 1);
+            }
+        });
 
-//            tvSubTitle = findViewById(R.id.tvSubTitle);
-//            tvSubTitle.setText(Title);
+        btnPrev = findViewById(R.id.btnPrev);
+        btnPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentItem = viewPager.getCurrentItem();
+                viewPager.setCurrentItem(currentItem - 1);
+            }
+        });
 
-            viewPager = findViewById(R.id.viewPager);
+        call = new ChapterCall(getString(R.string.MANGA_API_BASE_URL));
+        String endpoint = getIntent().getStringExtra("endpoint");
 
-            btnNext = findViewById(R.id.btnNext);
-            btnNext.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int currentItem = viewPager.getCurrentItem();
-                    viewPager.setCurrentItem(currentItem + 1);
-                }
-            });
-
-            btnPrev = findViewById(R.id.btnPrev);
-            btnPrev.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int currentItem = viewPager.getCurrentItem();
-                    viewPager.setCurrentItem(currentItem - 1);
-                }
-            });
-
-//            getChapterImage();
-        }
-    }
-
-    private void getChapter() {
         progressDialog.show();
-//        AndroidNetworking.get(ApiEndpoint.CHAPTERURL)
-//                .addPathParameter("chapter_endpoint", ChapterEndpoint)
-//                .setPriority(Priority.HIGH)
-//                .build()
-//                .getAsJSONObject(new JSONObjectRequestListener() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            progressDialog.dismiss();
-//                            JSONArray playerArray = response.getJSONArray("chapter_image");
-//                            for (int i = 0; i < playerArray.length(); i++) {
-//                                JSONObject temp = playerArray.getJSONObject(i);
-//                                ModelChapter dataApi = new ModelChapter();
-//                                dataApi.setChapterImage(temp.getString("chapter_image_link"));
-//                                dataApi.setImageNumber(temp.getString("image_number"));
-//
-//                                Subtitle = response.getString("title");
-//                                tvSubTitle.setText(Subtitle);
-//                                modelChapters.add(dataApi);
-//                                setImage();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                            Toast.makeText(ChapterActivity.this, "Gagal menampilkan data!", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(ANError anError) {
-//                        progressDialog.dismiss();
-//                        Toast.makeText(ChapterActivity.this, "Tidak ada jaringan internet!", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+        call.getChapterDetail(endpoint).enqueue(new Callback<ChapterResponse>() {
+            @Override
+            public void onResponse(Call<ChapterResponse> call, Response<ChapterResponse> response) {
+                assert response.body() != null;
+                if (response.body().isSuccess()) {
+                    model = response.body().getChapter();
+                    tvChapterName.setText(model.getTitle());
+                    setImage(model);
+
+                    progressDialog.dismiss();
+
+                    Log.d("Call Result(success)", "Title : " + model.getTitle());
+                    Log.d("Call Result(success)", "Images : " + model.getImages().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChapterResponse> call, Throwable t) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        "Failed Loading Resources",
+                        Toast.LENGTH_SHORT
+                ).show();
+                finish();
+            }
+        });
     }
 
-    private void setImage() {
-//        adapter = new AdapterImageChapter(modelChapters, this);
-//        viewPager.setAdapter(adapter);
+    private void setImage(ChapterModel model) {
+        adapter = new ChapterAdapter(model, this, R.layout.list_item_detail_chapter, R.id.tvPagination, R.id.imgPhoto);
+        viewPager.setAdapter(adapter);
     }
 
     @Override

@@ -45,15 +45,15 @@
                 app:itemTextColor="@color/selector_navigation"
                 app:menu="@menu/menu_navigation" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center"
-                android:layout_marginBottom="35dp"
-                android:src="@drawable/ic_comic"
-                app:elevation="4dp"
-                app:fabSize="normal" />
+<!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                android:id="@+id/fab"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="bottom|center"-->
+<!--                android:layout_marginBottom="35dp"-->
+<!--                android:src="@drawable/ic_comic"-->
+<!--                app:elevation="4dp"-->
+<!--                app:fabSize="normal" />-->
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

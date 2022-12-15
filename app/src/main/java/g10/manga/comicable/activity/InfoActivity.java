@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +63,7 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
 
     private CheckpointController checkpointController;
     private CheckpointModel checkpointModel;
+    private boolean favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,16 +134,6 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
 
                         // HEART LOGO
                         getCheckpoint(MainActivity.getAuthModel(), infoModel);
-                        ivFavorite.setOnClickListener(v -> {
-                            if (ivFavorite.getDrawable().equals(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled)))
-                                checkpointController.delete(MainActivity.getAuthModel(), checkpointModel);
-                            else
-                                checkpointController.create(MainActivity.getAuthModel(), checkpointModel);
-
-                            ivFavorite.setImageDrawable((ivFavorite.getDrawable().equals(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled)))
-                                    ? getResources().getDrawable(R.drawable.ic_favorite_heart_button)
-                                    : getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled));
-                        });
 
                         chapterList = infoModel.getChapterList();
                         if (chapterList == null) {
@@ -191,6 +183,23 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
+
+        ivFavorite.setOnClickListener(v -> {
+            Log.d(getLocalClassName(), "ivFavorite : Clicked");
+            if (favorite) {
+                checkpointController.delete(MainActivity.getAuthModel(), checkpointModel);
+                ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_heart_button));
+                favorite = false;
+            }
+            else {
+                checkpointModel = new CheckpointModel();
+                checkpointModel.setUser(MainActivity.getAuthModel());
+                checkpointModel.setManga(infoModel);
+                checkpointController.create(MainActivity.getAuthModel(), checkpointModel);
+                ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled));
+                favorite = true;
+            }
+        });
     }
 
     private void getChapters(List<ChapterListModel> model) {
@@ -209,8 +218,12 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
         Intent intent = new Intent(this, (model.getName().equals("Not Available"))
                                                         ? MainActivity.class
                                                         : ChapterActivity.class);
-        if (!model.getName().equals("Not Available"))
+        if (!model.getName().equals("Not Available")) {
             intent.putExtra("endpoint", model.getEndpoint());
+            if (checkpointModel != null)
+                intent.putExtra("checkpoint", (Serializable)checkpointModel);
+        }
+
         startActivity(intent);
     }
 
@@ -225,12 +238,20 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
     }
 
     private void getCheckpoint(AuthModel authModel, InfoModel infoModel) {
+        Log.d(this.getLocalClassName(), "getCheckpoint (authModel) : " + authModel.getName());
         checkpointController.read(authModel, infoModel.getTitle(), new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (task.isSuccessful()) {
                     checkpointModel = task.getResult().getValue(CheckpointModel.class);
-                    ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled));
+                    if (checkpointModel != null) {
+                        ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled));
+                        favorite = true;
+                    }
+                    else {
+                        ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_heart_button));
+                        favorite = false;
+                    }
                 }
             }
         });

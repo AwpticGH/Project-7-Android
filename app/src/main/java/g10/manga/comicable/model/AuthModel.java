@@ -1,6 +1,8 @@
 package g10.manga.comicable.model;
 
-public class AuthModel {
+import java.io.Serializable;
+
+public class AuthModel implements Serializable {
 
     private String id;
     private String email;
