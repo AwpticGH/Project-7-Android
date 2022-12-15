@@ -124,8 +124,14 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
 
                         getChapters(chapterList);
                     }
-                    else
+                    else {
+                        Toast.makeText(
+                                getApplicationContext(),
+                                "Comic Info Not Available",
+                                Toast.LENGTH_SHORT
+                        ).show();
                         startMainActivity();
+                    }
                 }
 
                 @Override
