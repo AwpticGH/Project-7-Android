@@ -164,6 +164,7 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
 
                 @Override
                 public void onFailure(Call<InfoResponse> call, Throwable t) {
+                    Log.e(getLocalClassName(), t.getLocalizedMessage());
                     Toast.makeText(
                             getApplicationContext(),
                             "Failed Getting Resources",

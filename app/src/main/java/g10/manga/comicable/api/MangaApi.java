@@ -37,6 +37,6 @@ public interface MangaApi {
     Call<InfoResponse> getComicInfo(@Path("endpoint") String infoEndpoint);
 
     // Get Chapter Detail
-    @GET("chapter{endpoint}")
+    @GET("chapter/{endpoint}")
     Call<ChapterResponse> getChapterDetail(@Path("endpoint") String chapterEndpoint);
 }

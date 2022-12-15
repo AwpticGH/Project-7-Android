@@ -84,12 +84,12 @@ public class ChapterActivity extends AppCompatActivity {
 
         call = new ChapterCall(getString(R.string.MANGA_API_BASE_URL));
         String endpoint = getIntent().getStringExtra("endpoint");
-
+        Log.d(getLocalClassName(), "Chapter Endpoint : " + endpoint);
         progressDialog.show();
         call.getChapterDetail(endpoint).enqueue(new Callback<ChapterResponse>() {
             @Override
             public void onResponse(Call<ChapterResponse> call, Response<ChapterResponse> response) {
-
+                assert response.body() != null;
                 if (response.body().isSuccess()) {
                     model = response.body().getChapter();
                     tvChapterName.setText(model.getTitle());
