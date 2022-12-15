@@ -89,6 +89,16 @@ public class MainActivity extends AppCompatActivity {
         return authModel;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (!authController.isLoggedIn()) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        }
+    }
+
     private final CurveBottomBar.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new CurveBottomBar.OnNavigationItemSelectedListener() {
         @Override

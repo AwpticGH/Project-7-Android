@@ -109,7 +109,7 @@ public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSel
 
     @SuppressLint("SetTextI18n")
     private void getGreeting() {
-        String[] name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ");
+        String[] name = MainActivity.getAuthModel().getName().split(" ");
         String firstName = name[0];
         Calendar calendar = Calendar.getInstance();
         int timeOfDay = calendar.get(Calendar.HOUR_OF_DAY);
