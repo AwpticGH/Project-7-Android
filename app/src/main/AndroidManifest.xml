@@ -57,6 +57,13 @@
         <!-- android:value="" /> -->
         <!-- </activity> -->
         <activity
+            android:name=".activity.SettingActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".activity.UserUpdateActivity"
             android:exported="false">
             <meta-data
