@@ -16,12 +16,14 @@ import com.google.firebase.database.DataSnapshot;
 
 import g10.manga.comicable.R;
 import g10.manga.comicable.controller.AuthController;
+import g10.manga.comicable.controller.CheckpointController;
 import g10.manga.comicable.model.AuthModel;
 
 public class UserUpdateActivity extends AppCompatActivity {
 
     private AuthController controller;
     private AuthModel model;
+    private CheckpointController checkpointController;
 
     private TextView tvEmail, tvPassword, tvName;
     private Button btnUpdate, btnDelete;
@@ -32,6 +34,7 @@ public class UserUpdateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_update);
         controller = MainActivity.getAuthController();
         model = MainActivity.getAuthModel();
+        checkpointController = new CheckpointController();
 
         tvEmail = findViewById(R.id.text_email);
         tvPassword = findViewById(R.id.text_password);
@@ -76,6 +79,10 @@ public class UserUpdateActivity extends AppCompatActivity {
 
         btnDelete.setOnClickListener(view -> {
             controller.delete(model);
+            checkpointController.delete(model);
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
         });
     }
 

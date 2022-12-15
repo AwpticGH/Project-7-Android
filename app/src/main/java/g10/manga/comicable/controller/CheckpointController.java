@@ -57,6 +57,10 @@ public class CheckpointController {
         dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).setValue(checkpoint);
     }
 
+    public void delete(AuthModel authModel) {
+        dbReference.child(authModel.getId()).removeValue();
+    }
+
     public void delete(AuthModel authModel, CheckpointModel checkpoint) {
         dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).removeValue();
     }
