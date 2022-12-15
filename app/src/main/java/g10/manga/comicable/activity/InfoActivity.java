@@ -114,6 +114,8 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
                 public void onResponse(Call<InfoResponse> call, Response<InfoResponse> response) {
                     assert response.body() != null;
                     if (response.body().isSuccess()) {
+                        checkpointController = new CheckpointController();
+
                         infoModel = response.body().getInfo();
                         tvTitle.setText(infoModel.getTitle());
                         tvAuthor.setText(infoModel.getAuthor());
@@ -226,7 +228,6 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
         checkpointController.read(authModel, infoModel.getTitle(), new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                assert task.getResult().getValue(CheckpointModel.class) != null;
                 if (task.isSuccessful()) {
                     checkpointModel = task.getResult().getValue(CheckpointModel.class);
                     ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled));
