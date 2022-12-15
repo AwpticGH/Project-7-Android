@@ -98,23 +98,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 authModel = task.getResult().getValue(AuthModel.class);
+
+                navigation = findViewById(R.id.curveBottomBar);
+                navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+                CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
+                layoutParams.setBehavior(new BottomBarBehavior());
+
+                tvToolbar = findViewById(R.id.text_toolbar);
+                String greeting = "Halo, \n" + authModel.getName();
+                tvToolbar.setText(greeting);
+
+                if (savedInstanceState == null){
+                    navigation.setSelectedItemId(R.id.navigation_home);
+                }
             }
         });
-
-        navigation = findViewById(R.id.curveBottomBar);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
-        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) navigation.getLayoutParams();
-        layoutParams.setBehavior(new BottomBarBehavior());
-
-        tvToolbar = findViewById(R.id.text_toolbar);
-        String greeting = "Halo, \n" + FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        tvToolbar.setText(greeting);
-
-        if (savedInstanceState == null){
-            navigation.setSelectedItemId(R.id.navigation_home);
-        }
-
     }
 
     public static AuthController getAuthController() {

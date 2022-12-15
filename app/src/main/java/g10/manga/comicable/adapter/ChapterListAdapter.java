@@ -5,10 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -16,40 +19,58 @@ import g10.manga.comicable.helper.ImageHelper;
 import g10.manga.comicable.model.manga.ChapterListModel;
 import g10.manga.comicable.model.manga.PopularModel;
 
-public class ChapterListAdapter extends ArrayAdapter<ChapterListModel> {
+public class ChapterListAdapter extends RecyclerView.Adapter<ChapterListAdapter.ViewHolder> {
 
     private List<ChapterListModel> data;
     private Context context;
+    private ChapterListAdapter.OnObjectSelected onObjectSelected;
     private int layoutId;
-    private int tvTitleId;
-    private int imageViewId;
+    private int btnChapterNameId;
 
-    public ChapterListAdapter(@NonNull Context context, int resource, @NonNull List<ChapterListModel> objects, int tvTitleId, int imageViewId) {
-        super(context, resource, objects);
-        this.data = objects;
+    public ChapterListAdapter(List<ChapterListModel> data, Context context, ChapterListAdapter.OnObjectSelected onObjectSelected, int layoutId, int btnChapterNameId) {
+        this.data = data;
         this.context = context;
-        this.layoutId = resource;
-        this.tvTitleId = tvTitleId;
-        this.imageViewId = imageViewId;
+        this.onObjectSelected = onObjectSelected;
+        this.layoutId = layoutId;
+        this.btnChapterNameId = btnChapterNameId;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+        return new ViewHolder(view, layoutId, btnChapterNameId);
     }
 
     @Override
-    public int getCount() {
-        return super.getCount();
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        final ChapterListModel model = data.get(position);
+
+        holder.button.setText(model.getName());
+        holder.button.setOnClickListener(view -> {
+            onObjectSelected.onSelected(model);
+        });
     }
 
     @Override
-    public View getView(int position, View convertedView, ViewGroup parent) {
-        convertedView = LayoutInflater.from(context)
-                .inflate(layoutId, parent, false);
-        TextView tvTitle = convertedView.findViewById(tvTitleId);
-        ImageView imageView = convertedView.findViewById(imageViewId);
+    public int getItemCount() {
+        return data.size();
+    }
 
-        tvTitle.setText(data.get(position).getName());
-        ImageHelper imageHelper = new ImageHelper(imageView, data.get(position).getEndpoint());
-        imageHelper.start();
+    public interface OnObjectSelected {
+        void onSelected(ChapterListModel model);
+    }
 
-        return convertedView;
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+        private LinearLayout layout;
+        private Button button;
+
+        public ViewHolder(@NonNull View itemView, int layoutId, int buttonId) {
+            super(itemView);
+            layout = itemView.findViewById(layoutId);
+            button = itemView.findViewById(buttonId);
+        }
     }
 
 }

@@ -1,64 +1,56 @@
-//package g10.manga.comicable.activity;
-//
-//import android.app.ProgressDialog;
-//import android.os.Bundle;
-//import android.view.MenuItem;
-//import android.view.View;
-//import android.widget.Button;
-//import android.widget.ImageView;
-//import android.widget.TextView;
-//import android.widget.Toast;
-//
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.appcompat.widget.Toolbar;
-//import androidx.viewpager.widget.ViewPager;
-//
-//import com.androidnetworking.AndroidNetworking;
-//import com.androidnetworking.common.Priority;
-//import com.androidnetworking.error.ANError;
-//import com.androidnetworking.interfaces.JSONObjectRequestListener;
-//import com.azhar.komik.R;
-//import com.azhar.komik.adapter.AdapterImageChapter;
-//import com.azhar.komik.model.ModelChapter;
-//import com.azhar.komik.networking.ApiEndpoint;
-//
-//import org.json.JSONArray;
-//import org.json.JSONException;
-//import org.json.JSONObject;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class ChapterActivity extends AppCompatActivity {
-//
-//    Toolbar toolbar;
-//    TextView tvTitle, tvSubTitle;
-//    ImageView imgChapter;
-//    String ChapterEndpoint, Title, Subtitle;
+package g10.manga.comicable.activity;
+
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import g10.manga.comicable.R;
+
+public class ChapterActivity extends AppCompatActivity {
+
+    Toolbar toolbar;
+    TextView tvTitle, tvSubTitle;
+    ImageView imgChapter;
+    String ChapterEndpoint, Title, Subtitle;
 //    ModelChapter modelChapter;
-//    ViewPager viewPager;
-//    Button btnNext, btnPrev;
-//    ProgressDialog progressDialog;
+    ViewPager viewPager;
+    Button btnNext, btnPrev;
+    ProgressDialog progressDialog;
 //    AdapterImageChapter adapter;
 //    List<ModelChapter> modelChapters = new ArrayList<>();
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_chapter);
-//
-//        progressDialog = new ProgressDialog(this);
-//        progressDialog.setTitle("Mohon Tunggu");
-//        progressDialog.setCancelable(false);
-//        progressDialog.setMessage("Sedang menampilkan gambar");
-//
-//        toolbar = findViewById(R.id.toolbar);
-//        toolbar.setTitle("");
-//        setSupportActionBar(toolbar);
-//        assert getSupportActionBar() != null;
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//
-//        modelChapter = (ModelChapter) getIntent().getSerializableExtra("detailChapter");
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chapter);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Mohon Tunggu");
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Sedang menampilkan gambar");
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 //        if (modelChapter != null) {
 //
 //            ChapterEndpoint = modelChapter.getChapterEndpoint();
@@ -88,13 +80,13 @@
 //                    viewPager.setCurrentItem(currentItem - 1);
 //                }
 //            });
-//
+
 //            getChapterImage();
 //        }
-//    }
-//
-//    private void getChapterImage() {
-//        progressDialog.show();
+    }
+
+    private void getChapterImage() {
+        progressDialog.show();
 //        AndroidNetworking.get(ApiEndpoint.CHAPTERURL)
 //                .addPathParameter("chapter_endpoint", ChapterEndpoint)
 //                .setPriority(Priority.HIGH)
@@ -128,19 +120,19 @@
 //                        Toast.makeText(ChapterActivity.this, "Tidak ada jaringan internet!", Toast.LENGTH_SHORT).show();
 //                    }
 //                });
-//    }
-//
-//    private void setImage() {
+    }
+
+    private void setImage() {
 //        adapter = new AdapterImageChapter(modelChapters, this);
 //        viewPager.setAdapter(adapter);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == android.R.id.home) {
-//            this.finish();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-//}
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+}

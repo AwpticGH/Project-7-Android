@@ -7,7 +7,7 @@ public class BaseCall {
 
     protected MangaApi api;
 
-    protected BaseCall(String url) {
-        api = RetrofitHelper.getInstance(url).create(MangaApi.class);
+    protected BaseCall(String baseUrl) {
+        api = RetrofitHelper.getInstance(baseUrl).create(MangaApi.class);
     }
 }

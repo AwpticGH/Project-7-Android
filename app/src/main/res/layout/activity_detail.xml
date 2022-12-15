@@ -213,13 +213,13 @@
                                 android:id="@+id/tvTC"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Total Chapter :"
+                                android:text="Rating :"
                                 android:textColor="@android:color/black"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/tvAllChapter"
+                                android:id="@+id/tvRating"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/tvTC"
@@ -239,13 +239,13 @@
                             android:id="@+id/tvDesc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Sinopsis :"
+                            android:text="Status :"
                             android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvSynopsis"
+                            android:id="@+id/tvStatus2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tvDesc"

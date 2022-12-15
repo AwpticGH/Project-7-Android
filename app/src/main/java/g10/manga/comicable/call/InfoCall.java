@@ -13,35 +13,33 @@ public class InfoCall extends BaseCall{
 
     private InfoModel info;
 
-    public InfoCall(String url) {
-        super(url);
+    public InfoCall(String baseUrl) {
+        super(baseUrl);
     }
 
-    public InfoModel getComicInfo(String endpoint) {
-        Call<InfoResponse> call = api.getComicInfo(endpoint);
-        call.enqueue(new Callback<InfoResponse>() {
-            @Override
-            public void onResponse(Call<InfoResponse> call, Response<InfoResponse> response) {
-                assert response.body() != null;
-                if (response.body().isSuccess()) {
-                    info = response.body().getInfo();
-
-                    Log.d("Call Result(success)", "Author : " + info.getAuthor());
-                    Log.d("Call Result(success)", "Title : " + info.getTitle());
-                    Log.d("Call Result(success)", "Genre : " + info.getGenres().toString());
-                    for (ChapterListModel chapter : info.getChapterList()) {
-                        Log.d("Call Result(success)", "Chapter : " + chapter.getName());
-                        Log.d("Call Result(success)", "Chapter Endpoint : " + chapter.getEndpoint());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<InfoResponse> call, Throwable t) {
-                Log.e("Call Result(fail)", t.getLocalizedMessage());
-            }
-        });
-
-        return info;
+    public Call<InfoResponse> getComicInfo(String endpoint) {
+        return api.getComicInfo(endpoint);
+//        call.enqueue(new Callback<InfoResponse>() {
+//            @Override
+//            public void onResponse(Call<InfoResponse> call, Response<InfoResponse> response) {
+//                assert response.body() != null;
+//                if (response.body().isSuccess()) {
+//                    info = response.body().getInfo();
+//
+//                    Log.d("Call Result(success)", "Author : " + info.getAuthor());
+//                    Log.d("Call Result(success)", "Title : " + info.getTitle());
+//                    Log.d("Call Result(success)", "Genre : " + info.getGenres().toString());
+//                    for (ChapterListModel chapter : info.getChapterList()) {
+//                        Log.d("Call Result(success)", "Chapter : " + chapter.getName());
+//                        Log.d("Call Result(success)", "Chapter Endpoint : " + chapter.getEndpoint());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<InfoResponse> call, Throwable t) {
+//                Log.e("Call Result(fail)", t.getLocalizedMessage());
+//            }
+//        });
     }
 }
