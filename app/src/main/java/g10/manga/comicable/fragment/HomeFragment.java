@@ -134,7 +134,7 @@ public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSel
     private void getCall() {
         progressDialog.show();
 
-        popularCall.getCall(1).enqueue(new Callback<PopularResponse>() {
+        popularCall.getCall(Integer.parseInt(page)).enqueue(new Callback<PopularResponse>() {
             @Override
             public void onResponse(Call<PopularResponse> call, Response<PopularResponse> response) {
                 popularModels = response.body().getPopulars();
