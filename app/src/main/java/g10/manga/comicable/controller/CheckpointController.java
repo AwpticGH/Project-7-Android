@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -31,7 +32,10 @@ public class CheckpointController {
     }
 
     public void create(AuthModel authModel, CheckpointModel checkpoint) {
-        dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).child(checkpoint.getChapter().getName()).setValue(checkpoint);
+        if (checkpoint.getChapter() != null)
+            dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).child(checkpoint.getChapter().getName()).setValue(checkpoint);
+        else
+            dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).setValue(checkpoint);
     }
 
     public Task<DataSnapshot> readAll(AuthModel authModel) {
@@ -50,6 +54,13 @@ public class CheckpointController {
                 });
     }
 
+    public Task<DataSnapshot> read(AuthModel authModel, String mangaTitle, OnCompleteListener<DataSnapshot> onCompleteListener) {
+        return dbReference.child(authModel.getId())
+                .child(mangaTitle)
+                .get()
+                .addOnCompleteListener(onCompleteListener);
+    }
+
     public Task<DataSnapshot> read(AuthModel authModel, String mangaTitle, String chapterName, OnCompleteListener<DataSnapshot> onCompleteListener) {
         return dbReference.child(authModel.getId())
                 .child(mangaTitle)
@@ -60,10 +71,13 @@ public class CheckpointController {
     }
 
     public void update(AuthModel authModel, CheckpointModel checkpoint) {
-        dbReference.child(authModel.getId()).child(checkpoint.getId()).setValue(checkpoint);
+        if (checkpoint.getChapter() != null)
+            dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).child(checkpoint.getChapter().getName()).setValue(checkpoint);
+        else
+            dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).setValue(checkpoint);
     }
 
     public void delete(AuthModel authModel, CheckpointModel checkpoint) {
-        dbReference.child(authModel.getId()).child(checkpoint.getId()).removeValue();
+        dbReference.child(authModel.getId()).child(checkpoint.getManga().getTitle()).removeValue();
     }
 }

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +36,9 @@ import g10.manga.comicable.R;
 import g10.manga.comicable.adapter.ChapterListAdapter;
 import g10.manga.comicable.api.MangaApi;
 import g10.manga.comicable.call.InfoCall;
+import g10.manga.comicable.controller.CheckpointController;
+import g10.manga.comicable.model.AuthModel;
+import g10.manga.comicable.model.CheckpointModel;
 import g10.manga.comicable.model.manga.ChapterListModel;
 import g10.manga.comicable.model.manga.InfoModel;
 import g10.manga.comicable.response.InfoResponse;
@@ -44,7 +51,7 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
     private Toolbar toolbar;
     private RecyclerView recyclerView;
     private TextView tvTitle, tvType, tvAuthor, tvStatus, tvRating, tvGenre;
-    private ImageView imgViewThumbnail;
+    private ImageView imgViewThumbnail, ivFavorite;
 
     private String infoEndpoint;
     private InfoCall infoCall;
@@ -52,6 +59,9 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
     private ChapterListAdapter chapterListAdapter;
     private ProgressDialog progressDialog;
     private List<ChapterListModel> chapterList;
+
+    private CheckpointController checkpointController;
+    private CheckpointModel checkpointModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +91,7 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
 //        assert getSupportActionBar() != null;
 
         imgViewThumbnail = findViewById(R.id.imgPhoto);
+        ivFavorite = findViewById(R.id.iv_favorite);
         tvTitle = findViewById(R.id.tvName);
         tvAuthor = findViewById(R.id.tvNameAuthor);
         tvType = findViewById(R.id.tvType);
@@ -116,6 +127,19 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
                                 .load(infoModel.getThumbnail())
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .into(imgViewThumbnail);
+
+                        // HEART LOGO
+                        getCheckpoint(MainActivity.getAuthModel(), infoModel);
+                        ivFavorite.setOnClickListener(v -> {
+                            if (ivFavorite.getDrawable().equals(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled)))
+                                checkpointController.delete(MainActivity.getAuthModel(), checkpointModel);
+                            else
+                                checkpointController.create(MainActivity.getAuthModel(), checkpointModel);
+
+                            ivFavorite.setImageDrawable((ivFavorite.getDrawable().equals(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled)))
+                                    ? getResources().getDrawable(R.drawable.ic_favorite_heart_button)
+                                    : getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled));
+                        });
 
                         chapterList = infoModel.getChapterList();
                         if (chapterList == null) {
@@ -196,5 +220,18 @@ public class InfoActivity extends AppCompatActivity implements ChapterListAdapte
         else
             winParams.flags &= ~bits;
         window.setAttributes(winParams);
+    }
+
+    private void getCheckpoint(AuthModel authModel, InfoModel infoModel) {
+        checkpointController.read(authModel, infoModel.getTitle(), new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                assert task.getResult().getValue(CheckpointModel.class) != null;
+                if (task.isSuccessful()) {
+                    checkpointModel = task.getResult().getValue(CheckpointModel.class);
+                    ivFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_heart_button_filled));
+                }
+            }
+        });
     }
 }
