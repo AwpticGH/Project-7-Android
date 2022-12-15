@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import g10.manga.comicable.R;
 import g10.manga.comicable.activity.LoginActivity;
 import g10.manga.comicable.activity.MainActivity;
+import g10.manga.comicable.activity.UserUpdateActivity;
 import g10.manga.comicable.controller.AuthController;
 import g10.manga.comicable.model.AuthModel;
 
@@ -28,6 +29,7 @@ public class SettingFragment extends Fragment {
 
     private TextView textResult;
     private Button btnLogout;
+    private Button btnUpdate;
 
     private Intent intentLogout;
 
@@ -41,6 +43,7 @@ public class SettingFragment extends Fragment {
 
         textResult = view.findViewById(R.id.text_user_name);
         btnLogout = view.findViewById(R.id.button_logout);
+        btnUpdate = view.findViewById(R.id.button_update);
 
         intentLogout = new Intent(view.getContext(), LoginActivity.class);
 
@@ -53,6 +56,10 @@ public class SettingFragment extends Fragment {
             startActivity(intentLogout);
             getActivity().finish();
             MainActivity.getAuthController().makeToast(R.integer.LOGOUT_SUCCESSFUL);
+        });
+
+        btnUpdate.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), UserUpdateActivity.class));
         });
     }
 
