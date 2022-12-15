@@ -83,6 +83,10 @@ public class AuthController {
                     String id = auth.getCurrentUser().getUid();
                     model.setId(id);
                     dbReference.child(id).setValue(model);
+                    UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(model.getName())
+                            .build();
+                    auth.getCurrentUser().updateProfile(profileUpdate);
                     activity.startActivity(new Intent(activity, LoginActivity.class));
                 }
                 else {
@@ -106,8 +110,13 @@ public class AuthController {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful())
+                        if (task.isSuccessful()) {
                             makeToast(R.integer.UPDATE_USER_SUCCESSFUL);
+                            UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(model.getName())
+                                    .build();
+                            FirebaseAuth.getInstance().getCurrentUser().updateProfile(profileUpdate);
+                        }
                         else
                             makeToast(R.integer.UPDATE_USER_FAILED);
                     }

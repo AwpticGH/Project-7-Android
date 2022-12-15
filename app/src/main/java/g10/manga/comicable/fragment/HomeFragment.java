@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.islamkhsh.CardSliderViewPager;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,22 +32,37 @@ import java.util.Calendar;
 import java.util.List;
 
 import g10.manga.comicable.R;
+import g10.manga.comicable.activity.InfoActivity;
+import g10.manga.comicable.activity.MainActivity;
+import g10.manga.comicable.adapter.PopularAdapter;
 import g10.manga.comicable.adapter.SliderAdapter;
+import g10.manga.comicable.call.PopularCall;
+import g10.manga.comicable.model.SliderModel;
+import g10.manga.comicable.model.manga.PopularModel;
+import g10.manga.comicable.response.PopularResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements PopularAdapter.OnObjectSelected {
 
-    private RecyclerView rvTerbaru;
-    private SliderAdapter adapterSlider;
+    private RecyclerView recyclerView;
+    private SliderAdapter sliderAdapter;
+    private PopularAdapter popularAdapter;
 //    private AdapterKomik adapterKomik;
     private ProgressDialog progressDialog;
     private CardSliderViewPager cardSliderViewPager;
+    private List<PopularModel> popularModels = new ArrayList<>();
+    private List<SliderModel> sliderModels = new ArrayList<>();
+    private PopularCall popularCall;
 //    private List<ModelKomik> modelKomik = new ArrayList<>();
 //    private List<ModelSlider> modelSlider = new ArrayList<>();
     private TextView greetText;
     private Spinner spPage;
-    private String [] numberPage = {"1", "2", "3", "4", "5"
-            , "6", "7", "8", "9", "10"};
-    private String Page;
+    private String[] numberPage = {"1", "2", "3", "4", "5"
+            , "6", "7", "8", "9", "10", "11", "12", "13", "14", "15"
+            , "16", "17", "18", "19", "110"};
+    private String page;
 
     public HomeFragment() {
 
@@ -77,120 +94,93 @@ public class HomeFragment extends Fragment {
         spPage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 Object itemDB = parent.getItemAtPosition(pos);
-                Page = itemDB.toString();
-//                getKomikTerbaru();
+                page = itemDB.toString();
             }
 
             public void onNothingSelected(AdapterView<?> parent) { }
         });
 
-        rvTerbaru = rootView.findViewById(R.id.rvTerbaru);
-        rvTerbaru.setHasFixedSize(true);
-        rvTerbaru.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView = rootView.findViewById(R.id.rvTerbaru);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        popularCall = new PopularCall(getString(R.string.MANGA_API_BASE_URL));
 
         getGreeting();
-        getImageSlider();
-        //getKomikTerbaru();
-
+        getCall();
     }
 
     @SuppressLint("SetTextI18n")
     private void getGreeting() {
+        String[] name = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ");
+        String firstName = name[0];
         Calendar calendar = Calendar.getInstance();
         int timeOfDay = calendar.get(Calendar.HOUR_OF_DAY);
 
-        if (timeOfDay >= 0 && timeOfDay < 12){
-            greetText.setText("Selamat Pagi Wahyu");
-        } else if (timeOfDay >= 12 && timeOfDay < 15) {
-            greetText.setText("Selamat Siang Wahyu");
-        } else if (timeOfDay >= 15 && timeOfDay < 18) {
-            greetText.setText("Selamat Sore Wahyu");
-        } else if (timeOfDay >= 18 && timeOfDay < 24) {
-            greetText.setText("Selamat Malam Wahyu");
+        if (timeOfDay >= 0 && timeOfDay < 12) {
+            greetText.setText("Selamat Pagi " + firstName);
+        }
+        else if (timeOfDay >= 12 && timeOfDay < 15) {
+            greetText.setText("Selamat Siang " + firstName);
+        }
+        else if (timeOfDay >= 15 && timeOfDay < 18) {
+            greetText.setText("Selamat Sore " + firstName);
+        }
+        else if (timeOfDay >= 18 && timeOfDay < 24) {
+            greetText.setText("Selamat Malam " + firstName);
         }
     }
 
-    private void getImageSlider() {
+    private void getCall() {
         progressDialog.show();
-//        AndroidNetworking.get(ApiEndpoint.ALSOURL)
-//                .setPriority(Priority.HIGH)
-//                .build()
-//                .getAsJSONObject(new JSONObjectRequestListener() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            progressDialog.dismiss();
-//                            JSONArray playerArray = response.getJSONArray("manga_list");
-//                            for (int i = 0; i < 8; i++) {
-//                                JSONObject temp = playerArray.getJSONObject(i);
-//                                ModelSlider dataApi = new ModelSlider();
-//                                dataApi.setThumb(temp.getString("thumb"));
-//                                modelSlider.add(dataApi);
-//                                adapterSlider = new AdapterSlider(modelSlider);
-//                            }
-//                            cardSliderViewPager.setAdapter(new AdapterSlider(modelSlider));
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                            Toast.makeText(getActivity(), "Gagal menampilkan data!", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(ANError anError) {
-//                        progressDialog.dismiss();
-//                        Toast.makeText(getActivity(), "Tidak ada jaringan internet!", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+
+        popularCall.getCall(1).enqueue(new Callback<PopularResponse>() {
+            @Override
+            public void onResponse(Call<PopularResponse> call, Response<PopularResponse> response) {
+                popularModels = response.body().getPopulars();
+                if (popularModels != null) {
+                    // Image Slider
+                    for (PopularModel model : popularModels) {
+                        SliderModel slider = new SliderModel();
+                        slider.setThumb(model.getImage());
+                        sliderModels.add(slider);
+                    }
+                    sliderAdapter = new SliderAdapter(sliderModels);
+                    cardSliderViewPager.setAdapter(sliderAdapter);
+
+                    // Popular Comics
+                    getComics();
+
+                    progressDialog.dismiss();
+                }
+                else {
+                    progressDialog.dismiss();
+                    Toast.makeText(
+                            getActivity(),
+                            "Failed Getting Resources",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PopularResponse> call, Throwable t) {
+                Log.e("PopularCall", "Fail : [" + t.getLocalizedMessage() + "]");
+            }
+        });
     }
 
-//    private void getKomikTerbaru() {
-//        progressDialog.show();
-//        AndroidNetworking.get(ApiEndpoint.BASEURL + Page)
-//                .setPriority(Priority.HIGH)
-//                .build()
-//                .getAsJSONObject(new JSONObjectRequestListener() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        try {
-//                            progressDialog.dismiss();
-//                            modelKomik = new ArrayList<>();
-//                            JSONArray playerArray = response.getJSONArray("manga_list");
-//                            for (int i = 0; i < playerArray.length(); i++) {
-//                                JSONObject temp = playerArray.getJSONObject(i);
-//                                ModelKomik dataApi = new ModelKomik();
-//                                dataApi.setTitle(temp.getString("title"));
-//                                dataApi.setThumb(temp.getString("thumb"));
-//                                dataApi.setType(temp.getString("type"));
-//                                dataApi.setUpdated(temp.getString("updated_on"));
-//                                dataApi.setEndpoint(temp.getString("endpoint"));
-//                                dataApi.setChapter(temp.getString("chapter"));
-//                                modelKomik.add(dataApi);
-//                                showKomikTerbaru();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                            Toast.makeText(getActivity(), "Gagal menampilkan data!", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onError(ANError anError) {
-//                        progressDialog.dismiss();
-//                        Toast.makeText(getActivity(), "Tidak ada jaringan internet!", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
-
-    private void showKomikTerbaru() {
-//        adapterKomik = new AdapterKomik(getActivity(), modelKomik, this);
-//        rvTerbaru.setAdapter(adapterKomik);
-//        adapterKomik.notifyDataSetChanged();
+    private void getComics() {
+        popularAdapter = new PopularAdapter(popularModels, getActivity(), this,
+                R.id.cvTerbaru, R.id.tvTitle, R.id.imgPhoto, R.id.tvDate, R.id.tvType);
+        recyclerView.setAdapter(popularAdapter);
+        popularAdapter.notifyDataSetChanged();
     }
 
-//    @Override
-//    public void onSelected(ModelKomik modelKomik) {
-//        Intent intent = new Intent(getActivity(), DetailPopulerActivity.class);
-//        intent.putExtra("detailKomik", modelKomik);
-//        startActivity(intent);
-//    }
+    @Override
+    public void onSelected(PopularModel model) {
+        Intent intent = new Intent(getActivity(), InfoActivity.class);
+        intent.putExtra("mangaModel", model);
+        startActivity(intent);
+    }
 }

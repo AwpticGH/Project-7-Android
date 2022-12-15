@@ -1,6 +1,8 @@
 package g10.manga.comicable.model.manga;
 
-public class BaseModel {
+import java.io.Serializable;
+
+public class BaseModel implements Serializable {
 
 
 }

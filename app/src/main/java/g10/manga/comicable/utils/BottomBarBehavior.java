@@ -7,10 +7,6 @@ import androidx.core.view.ViewCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-/**
- * Created by Azhar Rivaldi on 22-12-2019.
- */
-
 public class BottomBarBehavior extends CoordinatorLayout.Behavior<BottomNavigationView> {
 
     private int height;

@@ -2,6 +2,7 @@ package g10.manga.comicable.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.Target;
 
 import java.net.URI;
 import java.util.List;
@@ -20,40 +26,73 @@ import g10.manga.comicable.R;
 import g10.manga.comicable.helper.ImageHelper;
 import g10.manga.comicable.model.manga.ListModel;
 
-public class ListAdapter extends ArrayAdapter<ListModel> {
+public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     private List<ListModel> data;
     private Context context;
-    private int layoutId;
+    private ListAdapter.OnObjectSelected onObjectSelected;
+    private int cardViewId;
     private int textViewId;
     private int imageViewId;
 
-    public ListAdapter(@NonNull Context context, int resource, @NonNull List<ListModel> objects, int textViewId, int imageViewId) {
-        super(context, resource, objects);
-        this.data = objects;
+    public ListAdapter(List<ListModel> data, Context context, ListAdapter.OnObjectSelected onObjectSelected,
+                       int cardViewId, int textViewId, int imageViewId) {
+        this.data = data;
         this.context = context;
-        this.layoutId = resource;
+        this.onObjectSelected = onObjectSelected;
+        this.cardViewId = cardViewId;
         this.textViewId = textViewId;
         this.imageViewId = imageViewId;
     }
 
+    @NonNull
     @Override
-    public int getCount() {
-        return super.getCount();
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(viewType, parent, false);
+        return new ViewHolder(view, cardViewId, textViewId, imageViewId);
     }
 
     @Override
-    public View getView(int position, View convertedView, ViewGroup parent) {
-        convertedView = LayoutInflater.from(context)
-                .inflate(layoutId, parent, false);
-        TextView text = convertedView.findViewById(textViewId);
-        ImageView image = convertedView.findViewById(imageViewId);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        ListModel model = data.get(position);
 
-        text.setText(data.get(position).getTitle());
-        ImageHelper imageHelper = new ImageHelper(image, data.get(position).getEndpoint());
-        imageHelper.start();
+        Glide.with(context)
+                .load(model.getImage())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(Target.SIZE_ORIGINAL)
+                .into(holder.imageView);
 
-        return convertedView;
+        holder.tvTitle.setText(model.getTitle());
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onObjectSelected.onObjectSelected(model);
+            }
+        });
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return data.size();
+    }
+
+    public interface OnObjectSelected {
+        void onObjectSelected(ListModel model);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+
+        private CardView cardView;
+        private TextView tvTitle;
+        private ImageView imageView;
+
+        public ViewHolder(@NonNull View itemView, int cardViewId, int tvTitleId, int imageViewId) {
+            super(itemView);
+            this.cardView = itemView.findViewById(cardViewId);
+            this.tvTitle = itemView.findViewById(tvTitleId);
+            this.imageView = itemView.findViewById(imageViewId);
+        }
     }
 
 }

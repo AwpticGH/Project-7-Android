@@ -11,29 +11,26 @@
 //import androidx.cardview.widget.CardView;
 //import androidx.recyclerview.widget.RecyclerView;
 //
-//import com.azhar.komik.R;
-//import com.azhar.komik.model.ModelKomik;
 //import com.bumptech.glide.Glide;
 //import com.bumptech.glide.load.engine.DiskCacheStrategy;
 //import com.bumptech.glide.request.target.Target;
 //
 //import java.util.List;
 //
-///**
-// * Created by Azhar Rivaldi on 22-12-2019.
-// */
+//import g10.manga.comicable.R;
+//import g10.manga.comicable.model.manga.PopularModel;
 //
 //public class AdapterKomik extends RecyclerView.Adapter<AdapterKomik.ViewHolder> {
 //
-//    private List<ModelKomik> items;
+//    private List<PopularModel> items;
 //    private AdapterKomik.onSelectData onSelectData;
 //    private Context mContext;
 //
 //    public interface onSelectData {
-//        void onSelected(ModelKomik modelKomik);
+//        void onSelected(PopularModel model);
 //    }
 //
-//    public AdapterKomik(Context context, List<ModelKomik> items, AdapterKomik.onSelectData xSelectData) {
+//    public AdapterKomik(Context context, List<PopularModel> items, AdapterKomik.onSelectData xSelectData) {
 //        this.mContext = context;
 //        this.items = items;
 //        this.onSelectData = xSelectData;
@@ -47,7 +44,7 @@
 //
 //    @Override
 //    public void onBindViewHolder(ViewHolder holder, int position) {
-//        final ModelKomik data = items.get(position);
+//        final PopularModel data = items.get(position);
 //
 //        if (data.getType().equals("Manhua"))
 //            holder.tvType.setTextColor(Color.parseColor("#ff27AE60"));
@@ -57,7 +54,7 @@
 //            holder.tvType.setTextColor(Color.parseColor("#ffE8505B"));
 //
 //        Glide.with(mContext)
-//                .load(data.getThumb())
+//                .load(data.getImage())
 //                .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                .override(Target.SIZE_ORIGINAL)
 //                .into(holder.imgPhoto);
@@ -83,7 +80,7 @@
 //
 //        public TextView tvTitle;
 //        public TextView tvType;
-//        public TextView tvDate;
+//        public TextView tvDesc;
 //        public CardView cvTerbaru;
 //        public ImageView imgPhoto;
 //
@@ -93,7 +90,7 @@
 //            imgPhoto = itemView.findViewById(R.id.imgPhoto);
 //            tvTitle = itemView.findViewById(R.id.tvTitle);
 //            tvType = itemView.findViewById(R.id.tvType);
-//            tvDate = itemView.findViewById(R.id.tvDate);
+//            tvDesc = itemView.findViewById(R.id.tvDate);
 //        }
 //    }
 //}

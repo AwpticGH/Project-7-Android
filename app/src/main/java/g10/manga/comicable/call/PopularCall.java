@@ -18,29 +18,27 @@ public class PopularCall extends BaseCall {
         super(url);
     }
 
-    public List<PopularModel> getPopulars(int page) {
-        Call<PopularResponse> call = api.getPopularComics(page);
-        call.enqueue(new Callback<PopularResponse>() {
-            @Override
-            public void onResponse(Call<PopularResponse> call, Response<PopularResponse> response) {
-                assert response.body() != null;
-                if (response.body().isSuccess()) {
-                    populars = response.body().getPopulars();
-
-                    for (PopularModel popular : populars) {
-                        Log.d("Call Result(success)", "Title : " + popular.getTitle());
-                        Log.d("Call Result(success)", "Type : " + popular.getType());
-                        Log.d("Call Result(success)", "Description : " + popular.getDescription());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<PopularResponse> call, Throwable t) {
-                Log.e("Call Result(fail)", t.getLocalizedMessage());
-            }
-        });
-
-        return populars;
+    public Call<PopularResponse> getCall(int page) {
+        return api.getPopularComics(page);
+//        call.enqueue(new Callback<PopularResponse>() {
+//            @Override
+//            public void onResponse(Call<PopularResponse> call, Response<PopularResponse> response) {
+//                assert response.body() != null;
+//                if (response.body().isSuccess()) {
+//                    populars = response.body().getPopulars();
+//
+//                    for (PopularModel popular : populars) {
+//                        Log.d("Call Result(success)", "Title : " + popular.getTitle());
+//                        Log.d("Call Result(success)", "Type : " + popular.getType());
+//                        Log.d("Call Result(success)", "Description : " + popular.getDescription());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<PopularResponse> call, Throwable t) {
+//                Log.e("Call Result(fail)", t.getLocalizedMessage());
+//            }
+//        });
     }
 }

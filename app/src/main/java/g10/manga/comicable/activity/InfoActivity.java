@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,7 +19,7 @@ import retrofit2.Response;
 
 public class InfoActivity extends AppCompatActivity {
 
-//    private ActivityInfoBinding binding;
+    private Toolbar toolbar;
     private TextView tvTitle;
 
     private InfoModel info;
