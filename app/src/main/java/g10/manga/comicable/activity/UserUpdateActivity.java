@@ -73,6 +73,10 @@ public class UserUpdateActivity extends AppCompatActivity {
 
             controller.update(model);
         });
+
+        btnDelete.setOnClickListener(view -> {
+            controller.delete(model);
+        });
     }
 
     private void setViewAttributes() {

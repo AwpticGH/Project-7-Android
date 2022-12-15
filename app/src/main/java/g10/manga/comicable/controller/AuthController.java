@@ -123,6 +123,10 @@ public class AuthController {
                 });
     }
 
+    public void delete(AuthModel model) {
+        dbReference.child(model.getId()).removeValue();
+    }
+
     public void loginWithEmailAndPassword(String email, String password) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInWithEmailAndPassword(email, password)
