@@ -21,19 +21,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import g10.manga.comicable.R;
+import g10.manga.comicable.model.manga.ChapterModel;
 
 public class ChapterActivity extends AppCompatActivity {
 
     Toolbar toolbar;
-    TextView tvTitle, tvSubTitle;
+    TextView tvChapterName;
     ImageView imgChapter;
-    String ChapterEndpoint, Title, Subtitle;
-//    ModelChapter modelChapter;
+    ChapterModel model;
     ViewPager viewPager;
     Button btnNext, btnPrev;
     ProgressDialog progressDialog;
-//    AdapterImageChapter adapter;
-//    List<ModelChapter> modelChapters = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,42 +45,43 @@ public class ChapterActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        setSupportActionBar(toolbar);
+//        assert getSupportActionBar() != null;
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        if (modelChapter != null) {
-//
-//            ChapterEndpoint = modelChapter.getChapterEndpoint();
+        if (model != null) {
+//            String endpoint = modelChapter.getChapterEndpoint();
 //            Title = modelChapter.getChapterTitle();
-//
-//            tvTitle = findViewById(R.id.tvTitle);
-//            tvTitle.setText(Title);
-//            tvTitle.setSelected(true);
-//
+
+            tvChapterName = findViewById(R.id.tvTitle);
+//            tvChapterName.setText(Title);
+            tvChapterName.setSelected(true);
+
 //            tvSubTitle = findViewById(R.id.tvSubTitle);
 //            tvSubTitle.setText(Title);
-//
-//            viewPager = findViewById(R.id.viewPager);
-//            btnNext = findViewById(R.id.btnNext);
-//            btnNext.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    int currentItem = viewPager.getCurrentItem();
-//                    viewPager.setCurrentItem(currentItem + 1);
-//                }
-//            });
-//            btnPrev = findViewById(R.id.btnPrev);
-//            btnPrev.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    int currentItem = viewPager.getCurrentItem();
-//                    viewPager.setCurrentItem(currentItem - 1);
-//                }
-//            });
+
+            viewPager = findViewById(R.id.viewPager);
+
+            btnNext = findViewById(R.id.btnNext);
+            btnNext.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int currentItem = viewPager.getCurrentItem();
+                    viewPager.setCurrentItem(currentItem + 1);
+                }
+            });
+
+            btnPrev = findViewById(R.id.btnPrev);
+            btnPrev.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int currentItem = viewPager.getCurrentItem();
+                    viewPager.setCurrentItem(currentItem - 1);
+                }
+            });
 
 //            getChapterImage();
-//        }
+        }
     }
 
     private void getChapterImage() {
