@@ -97,6 +97,7 @@ public class ChapterActivity extends AppCompatActivity {
         call.getChapterDetail(endpoint).enqueue(new Callback<ChapterResponse>() {
             @Override
             public void onResponse(Call<ChapterResponse> call, Response<ChapterResponse> response) {
+                Log.d("Call URL", call.request().url().toString());
                 assert response.body() != null;
                 if (response.body().isSuccess()) {
                     model = response.body().getChapter();

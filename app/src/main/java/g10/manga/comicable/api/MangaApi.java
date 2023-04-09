@@ -1,10 +1,5 @@
 package g10.manga.comicable.api;
 
-import java.util.List;
-
-import g10.manga.comicable.model.manga.InfoModel;
-import g10.manga.comicable.model.manga.PopularModel;
-import g10.manga.comicable.model.manga.RecommendedModel;
 import g10.manga.comicable.response.ChapterResponse;
 import g10.manga.comicable.response.InfoResponse;
 import g10.manga.comicable.response.ListResponse;
@@ -33,10 +28,10 @@ public interface MangaApi {
     Call<RecommendedResponse> getRecommendedComics(@Path("pageNumber") int pageNumber);
 
     // Get Comic Info
-    @GET("info/{endpoint}")
-    Call<InfoResponse> getComicInfo(@Path("endpoint") String infoEndpoint);
+    @GET("info{endpoint}")
+    Call<InfoResponse> getComicInfo(@Path(value = "endpoint", encoded = true) String infoEndpoint);
 
     // Get Chapter Detail
-    @GET("chapter/{endpoint}")
-    Call<ChapterResponse> getChapterDetail(@Path("endpoint") String chapterEndpoint);
+    @GET("chapter{endpoint}")
+    Call<ChapterResponse> getChapterDetail(@Path(value = "endpoint", encoded = true) String chapterEndpoint);
 }
