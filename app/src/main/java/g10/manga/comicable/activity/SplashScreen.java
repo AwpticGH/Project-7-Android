@@ -34,11 +34,11 @@ public class SplashScreen extends AppCompatActivity {
         tvComicable.startAnimation(slide);
 
         Handler handler = new Handler();
-        handler.postDelayed(this::startMainActivity, 3000);
+        handler.postDelayed(this::startMainActivity, 4000);
     }
 
     private void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }

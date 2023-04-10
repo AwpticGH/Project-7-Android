@@ -35,12 +35,14 @@
         tools:ignore="VisualLintOverlap" />
 
     <ImageView
-        android:layout_width="match_parent"
+        android:id="@+id/iv_theme_overlay"
+        android:layout_width="710dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="-700dp"
+        android:layout_marginTop="-1000dp"
         android:src="@drawable/selected_dot"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         />
 
 

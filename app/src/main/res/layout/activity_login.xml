@@ -6,6 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".activity.LoginActivity">
 
+    <ImageView
+        android:id="@+id/iv_theme_overlay"
+        android:layout_width="710dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="-1000dp"
+        android:src="@drawable/selected_dot"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/iv_app_logo"
+        android:layout_width="73dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="200dp"
+        android:src="@drawable/ic_comic"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -26,7 +47,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4">
+        app:layout_constraintVertical_bias="0.45">
 
         <EditText
             android:id="@+id/input_login_email"
@@ -60,31 +81,34 @@
     <Button
         android:id="@+id/button_login"
         style="@style/Widget.Material3.Button.UnelevatedButton"
-        android:layout_width="88dp"
-        android:layout_height="wrap_content"
-        android:textSize="15dp"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
         android:text="Login"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_input_password"
-        app:layout_constraintVertical_bias="0.1"/>
+        app:layout_constraintVertical_bias="0.1"
+        tools:ignore="TextSizeCheck" />
 
     <Button
         android:id="@+id/button_register_page"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
         android:text="Register"
         app:layout_constraintBottom_toTopOf="@+id/button_login_with_google"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_login"/>
+        app:layout_constraintTop_toBottomOf="@+id/button_login"
+        app:layout_constraintVertical_bias="0.1"
+        />
 
     <TextView
         android:id="@+id/text_or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="40dp"
         android:text="OR"
         android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/button_register_page"

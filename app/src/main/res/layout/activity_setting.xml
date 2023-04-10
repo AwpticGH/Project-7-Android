@@ -8,12 +8,13 @@
 
     <ImageView
         android:id="@+id/iv_theme_overlay"
-        android:layout_width="match_parent"
+        android:layout_width="710dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="-700dp"
+        android:layout_marginTop="-1000dp"
         android:src="@drawable/selected_dot"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         />
 
     <ImageView
@@ -30,15 +31,14 @@
 
     <ImageView
         android:id="@+id/iv_profile_pic_fg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="67dp"
+        android:layout_height="57dp"
+        android:src="@drawable/ic_comic"
         app:layout_constraintBottom_toTopOf="@id/text_user_name"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.3"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35" />
 
     <TextView
         android:id="@+id/text_user_name"
